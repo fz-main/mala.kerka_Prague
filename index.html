@@ -1,0 +1,1855 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>mala.kerka — Praha</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f5f0e8;
+    --warm: #e8dfc8;
+    --dark: #1a1510;
+    --espresso: #2c1f14;
+    --gold: #c9a84c;
+    --gold-light: #e8c96a;
+    --copper: #b5651d;
+    --muted: #7a6a58;
+    --text: #3a2e24;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; overflow-x: hidden; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    cursor: none;
+  }
+
+  /* CUSTOM CURSOR */
+  .cursor {
+    position: fixed; width: 12px; height: 12px;
+    background: var(--gold); border-radius: 50%;
+    pointer-events: none; z-index: 10000;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
+  }
+  .cursor-follower {
+    position: fixed; width: 40px; height: 40px;
+    border: 1px solid var(--gold); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: left 0.12s ease-out, top 0.12s ease-out, width 0.3s, height 0.3s;
+    opacity: 0.6;
+  }
+  body:hover .cursor { opacity: 1; }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 1;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+
+  /* LANGUAGE SWITCHER */
+  .lang-bar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    display: flex; justify-content: flex-end; align-items: center;
+    padding: 14px 40px;
+    background: rgba(245,240,232,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+    transition: background 0.3s;
+  }
+  .lang-bar.scrolled { background: rgba(245,240,232,0.97); }
+  .lang-btn {
+    background: none; border: none; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; font-size: 11px;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--muted); padding: 4px 10px;
+    transition: color 0.2s;
+  }
+  .lang-btn:hover, .lang-btn.active { color: var(--gold); }
+  .lang-btn + .lang-btn { border-left: 1px solid rgba(122,106,88,0.3); }
+  .brand-nav {
+    margin-right: auto;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px; font-weight: 400;
+    letter-spacing: 0.05em; color: var(--espresso);
+    text-decoration: none;
+  }
+
+  /* ============================
+     INTRO / HERO — OPENING ANIMATION
+  ============================ */
+  #loader {
+    position: fixed; inset: 0; z-index: 9000;
+    background: var(--espresso);
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  #loader.hide { opacity: 0; pointer-events: none; transform: scale(1.05); }
+
+  .loader-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(48px, 10vw, 100px);
+    color: var(--cream);
+    letter-spacing: 0.08em;
+    overflow: hidden;
+    display: flex; gap: 0;
+  }
+  .loader-logo span {
+    display: inline-block;
+    transform: translateY(120%);
+    opacity: 0;
+    animation: riseUp 0.8s cubic-bezier(.22,1,.36,1) forwards;
+  }
+  .loader-logo span:nth-child(1) { animation-delay: 0.1s; }
+  .loader-logo span:nth-child(2) { animation-delay: 0.15s; }
+  .loader-logo span:nth-child(3) { animation-delay: 0.2s; }
+  .loader-logo span:nth-child(4) { animation-delay: 0.25s; }
+  .loader-logo span:nth-child(5) { animation-delay: 0.3s; }
+  .loader-logo span:nth-child(6) { animation-delay: 0.35s; }
+  .loader-logo span:nth-child(7) { animation-delay: 0.4s; }
+  .loader-logo span:nth-child(8) { animation-delay: 0.45s; }
+  .loader-logo span:nth-child(9) { animation-delay: 0.5s; }
+  .loader-logo span:nth-child(10) { animation-delay: 0.55s; }
+  .loader-dot {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(48px, 10vw, 100px);
+    color: var(--gold); animation-delay: 0.3s;
+  }
+
+  .loader-line {
+    width: 0; height: 1px; background: var(--gold);
+    margin-top: 20px;
+    animation: expandLine 0.8s ease 0.8s forwards;
+  }
+  .loader-sub {
+    font-family: 'DM Sans', sans-serif; font-size: 11px;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    color: rgba(245,240,232,0.4);
+    margin-top: 16px; opacity: 0;
+    animation: fadeIn 0.6s ease 1.2s forwards;
+  }
+  .loader-progress {
+    position: absolute; bottom: 0; left: 0;
+    height: 2px; background: var(--gold);
+    animation: progress 1.6s cubic-bezier(.4,0,.2,1) forwards;
+  }
+
+  @keyframes riseUp {
+    to { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes expandLine {
+    to { width: 200px; }
+  }
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+  @keyframes progress {
+    from { width: 0; } to { width: 100%; }
+  }
+
+  /* ============================
+     HERO SECTION
+  ============================ */
+  #hero {
+    min-height: 100vh;
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+    background: var(--espresso);
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(201,168,76,0.12) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(181,101,29,0.08) 0%, transparent 50%),
+                linear-gradient(160deg, #2c1f14 0%, #1a1510 60%, #0d0b08 100%);
+  }
+
+  /* Animated floating orbs */
+  .orb {
+    position: absolute; border-radius: 50%;
+    filter: blur(80px); pointer-events: none;
+    animation: floatOrb 12s ease-in-out infinite;
+  }
+  .orb-1 {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(201,168,76,0.15), transparent 70%);
+    top: -100px; left: -100px; animation-delay: 0s;
+  }
+  .orb-2 {
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(181,101,29,0.12), transparent 70%);
+    bottom: 100px; right: -50px; animation-delay: -4s;
+  }
+  .orb-3 {
+    width: 250px; height: 250px;
+    background: radial-gradient(circle, rgba(201,168,76,0.08), transparent 70%);
+    top: 50%; left: 50%; animation-delay: -8s;
+  }
+  @keyframes floatOrb {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -40px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.95); }
+  }
+
+  /* Decorative lines */
+  .hero-lines {
+    position: absolute; inset: 0; overflow: hidden; pointer-events: none;
+  }
+  .hero-lines::before {
+    content: '';
+    position: absolute; top: 50%; left: 50%;
+    width: 600px; height: 600px;
+    border: 1px solid rgba(201,168,76,0.08);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: pulse-ring 4s ease-in-out infinite;
+  }
+  .hero-lines::after {
+    content: '';
+    position: absolute; top: 50%; left: 50%;
+    width: 900px; height: 900px;
+    border: 1px solid rgba(201,168,76,0.04);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: pulse-ring 4s ease-in-out infinite 1s;
+  }
+  @keyframes pulse-ring {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    50% { transform: translate(-50%, -50%) scale(1.05); opacity: 0.5; }
+  }
+
+  .hero-content {
+    position: relative; z-index: 10;
+    text-align: center; padding: 0 24px;
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 1s ease 1.8s, transform 1s ease 1.8s;
+  }
+  .hero-content.visible { opacity: 1; transform: translateY(0); }
+
+  .hero-eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px; letter-spacing: 0.35em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 24px;
+    display: flex; align-items: center; justify-content: center; gap: 16px;
+  }
+  .hero-eyebrow::before, .hero-eyebrow::after {
+    content: ''; flex: 1; max-width: 60px; height: 1px; background: var(--gold); opacity: 0.5;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(64px, 12vw, 140px);
+    font-weight: 300; line-height: 0.9;
+    color: var(--cream);
+    margin-bottom: 8px;
+  }
+  .hero-title em {
+    font-style: italic; color: var(--gold);
+    display: block;
+  }
+  .hero-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(16px, 3vw, 22px);
+    font-weight: 300; font-style: italic;
+    color: rgba(245,240,232,0.5);
+    margin: 24px 0 40px;
+    letter-spacing: 0.05em;
+  }
+  .hero-cta {
+    display: inline-flex; align-items: center; gap: 12px;
+    padding: 14px 36px;
+    border: 1px solid var(--gold);
+    color: var(--gold); text-decoration: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase;
+    transition: all 0.4s;
+    position: relative; overflow: hidden;
+  }
+  .hero-cta::before {
+    content: ''; position: absolute; inset: 0;
+    background: var(--gold); transform: translateX(-101%);
+    transition: transform 0.4s cubic-bezier(.22,1,.36,1);
+    z-index: -1;
+  }
+  .hero-cta:hover::before { transform: translateX(0); }
+  .hero-cta:hover { color: var(--espresso); }
+
+  .hero-scroll {
+    position: absolute; bottom: 40px; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    color: rgba(245,240,232,0.3);
+    font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase;
+    animation: scrollBounce 2s ease-in-out infinite;
+  }
+  .hero-scroll::after {
+    content: ''; width: 1px; height: 40px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+  }
+  @keyframes scrollBounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
+  }
+
+  /* ============================
+     ABOUT / INTRO SECTION
+  ============================ */
+  #about {
+    padding: 120px 0;
+    background: var(--cream);
+    position: relative; overflow: hidden;
+  }
+  #about::before {
+    content: 'KERKA';
+    position: absolute; right: -60px; top: 50%;
+    transform: translateY(-50%) rotate(90deg);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 200px; font-weight: 300;
+    color: rgba(201,168,76,0.04);
+    pointer-events: none; white-space: nowrap;
+    letter-spacing: 0.1em;
+  }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+  .container-wide { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
+
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: center;
+  }
+  .section-tag {
+    font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-tag::before { content: ''; width: 30px; height: 1px; background: var(--gold); }
+
+  .section-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 5vw, 60px);
+    font-weight: 300; line-height: 1.1;
+    color: var(--espresso); margin-bottom: 28px;
+  }
+  .section-heading em { font-style: italic; color: var(--copper); }
+
+  .body-text {
+    font-size: 16px; line-height: 1.8;
+    color: var(--muted); margin-bottom: 20px;
+  }
+
+  .about-visual {
+    position: relative;
+  }
+  .about-card {
+    background: var(--espresso);
+    padding: 60px 50px;
+    position: relative; overflow: hidden;
+  }
+  .about-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 4px;
+    background: linear-gradient(90deg, var(--gold), var(--copper));
+  }
+  .about-card::after {
+    content: '';
+    position: absolute; bottom: -60px; right: -60px;
+    width: 200px; height: 200px;
+    border: 1px solid rgba(201,168,76,0.1);
+    border-radius: 50%;
+  }
+  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  .stat-item { }
+  .stat-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 52px; font-weight: 300;
+    color: var(--gold); line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-label {
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(245,240,232,0.4);
+  }
+  .about-img-wrap {
+    margin-top: 20px;
+    aspect-ratio: 4/3;
+    background: linear-gradient(135deg, #3d2b1a, #5c3d22);
+    position: relative; overflow: hidden;
+  }
+  .about-img-wrap::before {
+    content: '☕';
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 80px; opacity: 0.08;
+  }
+  /* Decorative corner bracket */
+  .corner-bracket {
+    position: absolute;
+    width: 30px; height: 30px;
+  }
+  .corner-bracket.tl { top: -8px; left: -8px; border-top: 2px solid var(--gold); border-left: 2px solid var(--gold); }
+  .corner-bracket.br { bottom: -8px; right: -8px; border-bottom: 2px solid var(--gold); border-right: 2px solid var(--gold); }
+
+  /* ============================
+     ADVANTAGES / WHY US
+  ============================ */
+  #advantages {
+    padding: 120px 0;
+    background: linear-gradient(160deg, #1a1510 0%, #2c1f14 100%);
+    position: relative; overflow: hidden;
+  }
+  #advantages::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 20% 50%, rgba(201,168,76,0.06) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 50%, rgba(181,101,29,0.04) 0%, transparent 60%);
+  }
+
+  .adv-header { text-align: center; margin-bottom: 80px; }
+  .adv-header .section-heading { color: var(--cream); }
+  .adv-header .section-tag { justify-content: center; }
+  .adv-header .section-tag::before { display: none; }
+
+  .adv-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+
+  .adv-card {
+    background: rgba(245,240,232,0.03);
+    padding: 50px 40px;
+    position: relative; overflow: hidden;
+    transition: background 0.4s;
+    cursor: default;
+    border: 1px solid rgba(201,168,76,0.08);
+  }
+  .adv-card:hover { background: rgba(245,240,232,0.06); }
+  .adv-card::before {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0; transition: opacity 0.4s;
+  }
+  .adv-card:hover::before { opacity: 1; }
+
+  .adv-icon {
+    font-size: 36px; margin-bottom: 24px;
+    display: block;
+    transform: scale(1);
+    transition: transform 0.3s;
+  }
+  .adv-card:hover .adv-icon { transform: scale(1.1); }
+
+  .adv-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px; font-weight: 400;
+    color: var(--cream); margin-bottom: 12px;
+  }
+  .adv-text {
+    font-size: 14px; line-height: 1.7;
+    color: rgba(245,240,232,0.45);
+  }
+  .adv-num {
+    position: absolute; top: 30px; right: 30px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 60px; font-weight: 300;
+    color: rgba(201,168,76,0.06);
+    line-height: 1;
+  }
+
+  /* ============================
+     SERVICES
+  ============================ */
+  #services {
+    padding: 120px 0;
+    background: var(--warm);
+    position: relative;
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-top: 60px;
+  }
+
+  .service-card {
+    background: var(--cream);
+    padding: 50px 44px;
+    position: relative; overflow: hidden;
+    transition: transform 0.4s cubic-bezier(.22,1,.36,1), box-shadow 0.4s;
+    border-bottom: 3px solid transparent;
+  }
+  .service-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 30px 60px rgba(44,31,20,0.12);
+    border-bottom-color: var(--gold);
+  }
+  .service-card::after {
+    content: attr(data-num);
+    position: absolute; bottom: 20px; right: 30px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 80px; font-weight: 300;
+    color: rgba(201,168,76,0.07);
+    line-height: 1;
+  }
+  .service-icon {
+    font-size: 32px; margin-bottom: 20px;
+    transition: transform 0.3s;
+  }
+  .service-card:hover .service-icon { transform: rotate(5deg) scale(1.1); }
+  .service-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px; font-weight: 400;
+    color: var(--espresso); margin-bottom: 12px;
+  }
+  .service-text { font-size: 14px; line-height: 1.75; color: var(--muted); }
+  .service-tag {
+    display: inline-block; margin-top: 20px;
+    padding: 4px 12px;
+    background: rgba(201,168,76,0.12);
+    color: var(--copper);
+    font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+  }
+
+  /* ============================
+     MENU / ASSORTMENT
+  ============================ */
+  #menu {
+    padding: 120px 0;
+    background: var(--espresso);
+    position: relative; overflow: hidden;
+  }
+  #menu::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: 
+      radial-gradient(ellipse at top left, rgba(201,168,76,0.08), transparent 50%),
+      radial-gradient(ellipse at bottom right, rgba(181,101,29,0.06), transparent 50%);
+  }
+
+  .menu-header { text-align: center; margin-bottom: 70px; position: relative; z-index: 1; }
+  .menu-header .section-heading { color: var(--cream); }
+  .menu-header .section-tag { justify-content: center; }
+  .menu-header .section-tag::before { display: none; }
+
+  .menu-tabs {
+    display: flex; justify-content: center; gap: 0;
+    margin-bottom: 50px; position: relative; z-index: 1;
+    flex-wrap: wrap;
+  }
+  .menu-tab {
+    padding: 12px 28px;
+    background: none; border: 1px solid rgba(201,168,76,0.2);
+    color: rgba(245,240,232,0.4);
+    font-family: 'DM Sans', sans-serif; font-size: 12px;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    cursor: pointer; transition: all 0.3s;
+    margin: -1px;
+  }
+  .menu-tab.active, .menu-tab:hover {
+    background: var(--gold); color: var(--espresso);
+    border-color: var(--gold);
+  }
+
+  .menu-panel { display: none; }
+  .menu-panel.active { display: block; animation: fadeInUp 0.5s ease; }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .menu-items {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: rgba(201,168,76,0.1);
+    position: relative; z-index: 1;
+  }
+
+  .menu-item {
+    background: rgba(26,21,16,0.8);
+    padding: 28px 36px;
+    display: flex; justify-content: space-between; align-items: flex-start;
+    transition: background 0.3s;
+    gap: 20px;
+  }
+  .menu-item:hover { background: rgba(44,31,20,0.9); }
+  .menu-item-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px; font-weight: 400;
+    color: var(--cream); margin-bottom: 4px;
+  }
+  .menu-item-desc { font-size: 13px; color: rgba(245,240,232,0.35); }
+  .menu-item-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 300;
+    color: var(--gold); white-space: nowrap;
+  }
+
+  /* ============================
+     GALLERY STRIP
+  ============================ */
+  .gallery-strip {
+    height: 200px;
+    display: flex; overflow: hidden;
+  }
+  .gallery-strip-item {
+    flex: 1; min-width: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 48px;
+    transition: flex 0.6s cubic-bezier(.22,1,.36,1);
+    position: relative; overflow: hidden;
+  }
+  .gallery-strip-item:nth-child(1) { background: linear-gradient(135deg, #3d2b1a, #5c3d22); }
+  .gallery-strip-item:nth-child(2) { background: linear-gradient(135deg, #4a3528, #6b4c35); }
+  .gallery-strip-item:nth-child(3) { background: linear-gradient(135deg, #352618, #4f3821); }
+  .gallery-strip-item:nth-child(4) { background: linear-gradient(135deg, #3b2a19, #5a3e24); }
+  .gallery-strip-item:nth-child(5) { background: linear-gradient(135deg, #2e2010, #453016); }
+  .gallery-strip-item:hover { flex: 3; }
+
+  /* ============================
+     CONTACT / MAP
+  ============================ */
+  #contact {
+    padding: 100px 0 0;
+    background: var(--cream);
+  }
+  .contact-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: start;
+    margin-bottom: 80px;
+  }
+  .contact-info { }
+  .contact-detail {
+    display: flex; align-items: flex-start; gap: 16px;
+    margin-bottom: 32px; padding-bottom: 32px;
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+  }
+  .contact-detail:last-child { border-bottom: none; }
+  .contact-icon { font-size: 20px; padding-top: 2px; }
+  .contact-label {
+    font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 4px;
+  }
+  .contact-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px; color: var(--espresso);
+  }
+
+  .hours-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
+    margin-top: 40px;
+  }
+  .hours-item {
+    padding: 20px;
+    background: var(--warm);
+    border-left: 2px solid var(--gold);
+  }
+  .hours-day {
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 4px;
+  }
+  .hours-time {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; color: var(--espresso);
+  }
+
+  .map-section {
+    height: 500px; position: relative;
+    border-top: 4px solid var(--gold);
+  }
+  .map-section iframe {
+    width: 100%; height: 100%; border: none;
+  }
+  .map-overlay {
+    position: absolute; top: 24px; left: 24px; z-index: 10;
+    background: var(--espresso);
+    padding: 20px 28px;
+    pointer-events: none;
+  }
+  .map-overlay-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px; color: var(--cream);
+  }
+  .map-overlay-addr {
+    font-size: 12px; color: var(--gold); margin-top: 4px;
+    letter-spacing: 0.05em;
+  }
+
+  /* ============================
+     FOOTER
+  ============================ */
+  footer {
+    background: var(--espresso);
+    padding: 60px 0 30px;
+  }
+  .footer-inner {
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 24px; margin-bottom: 40px;
+  }
+  .footer-brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px; color: var(--cream);
+    letter-spacing: 0.05em;
+  }
+  .footer-brand span { color: var(--gold); }
+  .footer-links {
+    display: flex; gap: 32px;
+  }
+  .footer-links a {
+    font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: rgba(245,240,232,0.4); text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--gold); }
+  .footer-copy {
+    text-align: center; padding-top: 30px;
+    border-top: 1px solid rgba(245,240,232,0.08);
+    font-size: 12px; color: rgba(245,240,232,0.2);
+    letter-spacing: 0.1em;
+  }
+
+  /* ============================
+     SCROLL ANIMATIONS
+  ============================ */
+  .reveal {
+    opacity: 0; transform: translateY(40px);
+    transition: opacity 0.8s cubic-bezier(.22,1,.36,1), transform 0.8s cubic-bezier(.22,1,.36,1);
+  }
+  .reveal.revealed { opacity: 1; transform: translateY(0); }
+  .reveal-left {
+    opacity: 0; transform: translateX(-40px);
+    transition: opacity 0.8s cubic-bezier(.22,1,.36,1), transform 0.8s cubic-bezier(.22,1,.36,1);
+  }
+  .reveal-left.revealed { opacity: 1; transform: translateX(0); }
+  .reveal-right {
+    opacity: 0; transform: translateX(40px);
+    transition: opacity 0.8s cubic-bezier(.22,1,.36,1), transform 0.8s cubic-bezier(.22,1,.36,1);
+  }
+  .reveal-right.revealed { opacity: 1; transform: translateX(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+  .reveal-delay-5 { transition-delay: 0.5s; }
+
+  /* ============================
+     RESPONSIVE
+  ============================ */
+  @media (max-width: 1024px) {
+    .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 50px; }
+    .adv-grid { grid-template-columns: repeat(2, 1fr); }
+    .services-grid { grid-template-columns: 1fr; }
+    .menu-items { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 768px) {
+    .container, .container-wide { padding: 0 24px; }
+    #about, #advantages, #services, #menu, #contact { padding: 80px 0; }
+    .adv-grid { grid-template-columns: 1fr; }
+    .stat-grid { grid-template-columns: 1fr 1fr; }
+    .lang-bar { padding: 12px 20px; }
+    .gallery-strip { height: 140px; }
+    .map-section { height: 400px; }
+    .hours-grid { grid-template-columns: 1fr; }
+    body { cursor: auto; }
+    .cursor, .cursor-follower { display: none; }
+    .footer-inner { flex-direction: column; text-align: center; }
+    .footer-links { justify-content: center; flex-wrap: wrap; gap: 16px; }
+    .hero-scroll { display: none; }
+    #about::before { display: none; }
+    .menu-tabs { gap: 8px; }
+    .menu-tab { padding: 10px 18px; }
+  }
+  @media (max-width: 480px) {
+    .adv-card, .service-card { padding: 36px 28px; }
+    .about-card { padding: 40px 30px; }
+    .menu-item { padding: 20px 24px; flex-direction: column; }
+  }
+
+  /* LANG HIDDEN */
+  [data-lang] { display: none; }
+  [data-lang].lang-active { display: block; }
+  [data-lang-inline] { display: none; }
+  [data-lang-inline].lang-active { display: inline; }
+</style>
+</head>
+<body>
+
+<!-- CUSTOM CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-follower" id="cursorFollower"></div>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-logo">
+    <span>m</span><span>a</span><span>l</span><span>a</span><span class="loader-dot">.</span><span>k</span><span>e</span><span>r</span><span>k</span><span>a</span>
+  </div>
+  <div class="loader-line"></div>
+  <div class="loader-sub">Praha · Café & Bistro</div>
+  <div class="loader-progress"></div>
+</div>
+
+<!-- LANGUAGE BAR -->
+<nav class="lang-bar" id="langBar">
+  <a href="#hero" class="brand-nav">mala<span style="color:var(--gold)">.</span>kerka</a>
+  <button class="lang-btn active" onclick="setLang('cs')">CS</button>
+  <button class="lang-btn" onclick="setLang('en')">EN</button>
+  <button class="lang-btn" onclick="setLang('de')">DE</button>
+  <button class="lang-btn" onclick="setLang('ru')">RU</button>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="hero-lines"></div>
+
+  <div class="hero-content" id="heroContent">
+    <div class="hero-eyebrow">
+      <span data-lang="cs" class="lang-active">Café & Bistro · Praha</span>
+      <span data-lang="en">Café & Bistro · Prague</span>
+      <span data-lang="de">Café & Bistro · Prag</span>
+      <span data-lang="ru">Кафе & Бистро · Прага</span>
+    </div>
+    <h1 class="hero-title">
+      mala<em>.kerka</em>
+    </h1>
+    <p class="hero-subtitle">
+      <span data-lang="cs" class="lang-active">Místo, kde čas plyne pomaleji</span>
+      <span data-lang="en">A place where time slows down</span>
+      <span data-lang="de">Ein Ort, wo die Zeit langsamer vergeht</span>
+      <span data-lang="ru">Место, где время течёт медленнее</span>
+    </p>
+    <a href="#about" class="hero-cta">
+      <span data-lang="cs" class="lang-active">Objevit více</span>
+      <span data-lang="en">Discover more</span>
+      <span data-lang="de">Mehr entdecken</span>
+      <span data-lang="ru">Узнать больше</span>
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+
+  <div class="hero-scroll">
+    <span data-lang="cs" class="lang-active">Scroll</span>
+    <span data-lang="en">Scroll</span>
+    <span data-lang="de">Scroll</span>
+    <span data-lang="ru">Листать</span>
+  </div>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="reveal-left">
+        <div class="section-tag">
+          <span data-lang="cs" class="lang-active">O nás</span>
+          <span data-lang="en">About Us</span>
+          <span data-lang="de">Über uns</span>
+          <span data-lang="ru">О нас</span>
+        </div>
+        <h2 class="section-heading">
+          <span data-lang="cs" class="lang-active">Srdce <em>Prahy</em><br>ve šálku kávy</span>
+          <span data-lang="en">The heart of <em>Prague</em><br>in a cup</span>
+          <span data-lang="de">Das Herz <em>Prags</em><br>in einer Tasse</span>
+          <span data-lang="ru">Сердце <em>Праги</em><br>в чашке кофе</span>
+        </h2>
+        <p class="body-text">
+          <span data-lang="cs" class="lang-active">mala.kerka je útulná kavárna a bistro ukrytá v srdci Prahy. Nabízíme pečlivě připravenou specialty kávu, domácí dezerty a sezónní pokrmy z lokálních surovin.</span>
+          <span data-lang="en">mala.kerka is a cozy café and bistro hidden in the heart of Prague. We offer carefully prepared specialty coffee, homemade desserts, and seasonal dishes from local ingredients.</span>
+          <span data-lang="de">mala.kerka ist ein gemütliches Café und Bistro, versteckt im Herzen Prags. Wir bieten sorgfältig zubereiteten Specialty-Kaffee, hausgemachte Desserts und saisonale Gerichte aus lokalen Zutaten.</span>
+          <span data-lang="ru">mala.kerka — уютное кафе и бистро в самом сердце Праги. Мы предлагаем тщательно приготовленный specialty-кофе, домашние десерты и сезонные блюда из местных продуктов.</span>
+        </p>
+        <p class="body-text">
+          <span data-lang="cs" class="lang-active">Naším cílem je vytvořit místo, kde se budete vždy cítit jako doma. Ať přijdete na ranní kávu, pracovní oběd nebo odpolední posezení s přáteli.</span>
+          <span data-lang="en">Our goal is to create a place where you will always feel at home — whether you come for morning coffee, a working lunch, or afternoon time with friends.</span>
+          <span data-lang="de">Unser Ziel ist es, einen Ort zu schaffen, an dem Sie sich immer wie zu Hause fühlen — ob Sie zum Morgenkaffee, Arbeitsessen oder Nachmittagstreffs kommen.</span>
+          <span data-lang="ru">Наша цель — создать место, где вы всегда будете чувствовать себя как дома, будь то утренний кофе, рабочий обед или вечернее общение с друзьями.</span>
+        </p>
+      </div>
+      <div class="about-visual reveal-right">
+        <div class="about-card" style="position:relative;">
+          <div class="corner-bracket tl"></div>
+          <div class="corner-bracket br"></div>
+          <div class="stat-grid">
+            <div class="stat-item">
+              <div class="stat-number">07:30</div>
+              <div class="stat-label">
+                <span data-lang="cs" class="lang-active">Otevíráme</span>
+                <span data-lang="en">Opens at</span>
+                <span data-lang="de">Öffnung</span>
+                <span data-lang="ru">Открытие</span>
+              </div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">22:00</div>
+              <div class="stat-label">
+                <span data-lang="cs" class="lang-active">Zavíráme</span>
+                <span data-lang="en">Closes at</span>
+                <span data-lang="de">Schließung</span>
+                <span data-lang="ru">Закрытие</span>
+              </div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">7×</div>
+              <div class="stat-label">
+                <span data-lang="cs" class="lang-active">Otevřeno denně</span>
+                <span data-lang="en">Open daily</span>
+                <span data-lang="de">Täglich geöffnet</span>
+                <span data-lang="ru">Открыто ежедневно</span>
+              </div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">♥</div>
+              <div class="stat-label">
+                <span data-lang="cs" class="lang-active">S láskou Praha</span>
+                <span data-lang="en">Made with love</span>
+                <span data-lang="de">Mit Liebe gemacht</span>
+                <span data-lang="ru">С любовью в Праге</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="about-img-wrap" style="margin-top:20px; display:flex; align-items:center; justify-content:center; gap:20px; padding:40px;">
+          <span style="font-size:48px; opacity:0.5;">☕</span>
+          <span style="font-size:48px; opacity:0.5;">🥐</span>
+          <span style="font-size:48px; opacity:0.5;">🍰</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GALLERY STRIP ============ -->
+<div class="gallery-strip">
+  <div class="gallery-strip-item"><span style="opacity:0.4; color:#c9a84c; font-size:36px;">☕</span></div>
+  <div class="gallery-strip-item"><span style="opacity:0.4; color:#c9a84c; font-size:36px;">🥐</span></div>
+  <div class="gallery-strip-item"><span style="opacity:0.4; color:#c9a84c; font-size:36px;">🍽️</span></div>
+  <div class="gallery-strip-item"><span style="opacity:0.4; color:#c9a84c; font-size:36px;">🍷</span></div>
+  <div class="gallery-strip-item"><span style="opacity:0.4; color:#c9a84c; font-size:36px;">🎂</span></div>
+</div>
+
+<!-- ============ ADVANTAGES ============ -->
+<section id="advantages">
+  <div class="container-wide" style="position:relative;z-index:1;">
+    <div class="adv-header reveal">
+      <div class="section-tag">
+        <span data-lang="cs" class="lang-active">Proč právě my</span>
+        <span data-lang="en">Why choose us</span>
+        <span data-lang="de">Warum wir</span>
+        <span data-lang="ru">Почему мы</span>
+      </div>
+      <h2 class="section-heading">
+        <span data-lang="cs" class="lang-active">Naše <em>přednosti</em></span>
+        <span data-lang="en">Our <em>advantages</em></span>
+        <span data-lang="de">Unsere <em>Vorzüge</em></span>
+        <span data-lang="ru">Наши <em>преимущества</em></span>
+      </h2>
+    </div>
+    <div class="adv-grid">
+      <div class="adv-card reveal reveal-delay-1">
+        <span class="adv-num">01</span>
+        <span class="adv-icon">☕</span>
+        <div class="adv-title">
+          <span data-lang="cs" class="lang-active">Specialty Káva</span>
+          <span data-lang="en">Specialty Coffee</span>
+          <span data-lang="de">Specialty-Kaffee</span>
+          <span data-lang="ru">Specialty-кофе</span>
+        </div>
+        <div class="adv-text">
+          <span data-lang="cs" class="lang-active">Používáme pouze výběrová kávová zrna od lokálních pražíren. Každý šálek připravujeme s maximální péčí a precizností.</span>
+          <span data-lang="en">We use only selected coffee beans from local roasters. Every cup is prepared with maximum care and precision.</span>
+          <span data-lang="de">Wir verwenden nur ausgewählte Kaffeebohnen von lokalen Röstern. Jede Tasse wird mit größter Sorgfalt zubereitet.</span>
+          <span data-lang="ru">Используем только отборные зёрна от местных обжарщиков. Каждая чашка готовится с максимальной заботой и точностью.</span>
+        </div>
+      </div>
+      <div class="adv-card reveal reveal-delay-2">
+        <span class="adv-num">02</span>
+        <span class="adv-icon">🥗</span>
+        <div class="adv-title">
+          <span data-lang="cs" class="lang-active">Čerstvé Suroviny</span>
+          <span data-lang="en">Fresh Ingredients</span>
+          <span data-lang="de">Frische Zutaten</span>
+          <span data-lang="ru">Свежие Продукты</span>
+        </div>
+        <div class="adv-text">
+          <span data-lang="cs" class="lang-active">Spolupracujeme s lokálními farmáři a dodavateli. Naše menu se mění se sezónou, aby vám přineslo to nejlepší z každého ročního období.</span>
+          <span data-lang="en">We work with local farmers and suppliers. Our menu changes with the seasons to bring you the best of each time of year.</span>
+          <span data-lang="de">Wir arbeiten mit lokalen Bauern und Lieferanten zusammen. Unser Menü wechselt mit den Jahreszeiten.</span>
+          <span data-lang="ru">Сотрудничаем с местными фермерами. Наше меню меняется с сезоном, принося вам лучшее круглый год.</span>
+        </div>
+      </div>
+      <div class="adv-card reveal reveal-delay-3">
+        <span class="adv-num">03</span>
+        <span class="adv-icon">🏡</span>
+        <div class="adv-title">
+          <span data-lang="cs" class="lang-active">Útulná Atmosféra</span>
+          <span data-lang="en">Cozy Atmosphere</span>
+          <span data-lang="de">Gemütliche Atmosphäre</span>
+          <span data-lang="ru">Уютная Атмосфера</span>
+        </div>
+        <div class="adv-text">
+          <span data-lang="cs" class="lang-active">Interiér navrhl místní designér, který spojil historii Prahy s moderní estetikou. Cítíte se u nás jako doma.</span>
+          <span data-lang="en">Interior designed by a local designer combining Prague's history with modern aesthetics. You'll feel right at home.</span>
+          <span data-lang="de">Interior von einem lokalen Designer gestaltet, der Prags Geschichte mit moderner Ästhetik verbindet.</span>
+          <span data-lang="ru">Интерьер от местного дизайнера, объединяющий историю Праги с современной эстетикой. Здесь вы почувствуете себя дома.</span>
+        </div>
+      </div>
+      <div class="adv-card reveal reveal-delay-4">
+        <span class="adv-num">04</span>
+        <span class="adv-icon">🌍</span>
+        <div class="adv-title">
+          <span data-lang="cs" class="lang-active">4 Jazyky</span>
+          <span data-lang="en">4 Languages</span>
+          <span data-lang="de">4 Sprachen</span>
+          <span data-lang="ru">4 Языка</span>
+        </div>
+        <div class="adv-text">
+          <span data-lang="cs" class="lang-active">Vítáme hosty ze všech koutů světa. Náš personál mluví česky, anglicky, německy a rusky.</span>
+          <span data-lang="en">We welcome guests from all corners of the world. Our staff speaks Czech, English, German, and Russian.</span>
+          <span data-lang="de">Wir begrüßen Gäste aus aller Welt. Unser Personal spricht Tschechisch, Englisch, Deutsch und Russisch.</span>
+          <span data-lang="ru">Принимаем гостей со всего мира. Наш персонал говорит на чешском, английском, немецком и русском языках.</span>
+        </div>
+      </div>
+      <div class="adv-card reveal reveal-delay-5">
+        <span class="adv-num">05</span>
+        <span class="adv-icon">📍</span>
+        <div class="adv-title">
+          <span data-lang="cs" class="lang-active">Skvělá Poloha</span>
+          <span data-lang="en">Great Location</span>
+          <span data-lang="de">Tolle Lage</span>
+          <span data-lang="ru">Отличное Расположение</span>
+        </div>
+        <div class="adv-text">
+          <span data-lang="cs" class="lang-active">Nacházíme se v samém srdci Prahy, snadno dostupní MHD i pěšky. Ideální zastávka při procházce historickým centrem.</span>
+          <span data-lang="en">Located in the very heart of Prague, easily accessible by public transport and on foot. Ideal stop during a stroll through the historic center.</span>
+          <span data-lang="de">Im Herzen Prags gelegen, leicht mit öffentlichen Verkehrsmitteln und zu Fuß erreichbar.</span>
+          <span data-lang="ru">Находимся в самом центре Праги, легко доступны на общественном транспорте и пешком.</span>
+        </div>
+      </div>
+      <div class="adv-card reveal reveal-delay-5">
+        <span class="adv-num">06</span>
+        <span class="adv-icon">💻</span>
+        <div class="adv-title">
+          <span data-lang="cs" class="lang-active">WiFi & Workspace</span>
+          <span data-lang="en">WiFi & Workspace</span>
+          <span data-lang="de">WiFi & Arbeitsplatz</span>
+          <span data-lang="ru">WiFi & Рабочее место</span>
+        </div>
+        <div class="adv-text">
+          <span data-lang="cs" class="lang-active">Rychlé WiFi připojení, dobíjecí stanice a klidné prostředí pro práci nebo studium. Ideální pro digitální nomády.</span>
+          <span data-lang="en">Fast WiFi, charging stations, and a quiet environment for work or study. Ideal for digital nomads.</span>
+          <span data-lang="de">Schnelles WiFi, Ladestationen und ruhige Umgebung für Arbeit oder Studium. Ideal für digitale Nomaden.</span>
+          <span data-lang="ru">Быстрый WiFi, зарядные станции и тихая обстановка для работы или учёбы. Идеально для цифровых кочевников.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SERVICES ============ -->
+<section id="services">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-tag">
+        <span data-lang="cs" class="lang-active">Co nabízíme</span>
+        <span data-lang="en">What we offer</span>
+        <span data-lang="de">Was wir anbieten</span>
+        <span data-lang="ru">Что мы предлагаем</span>
+      </div>
+      <h2 class="section-heading">
+        <span data-lang="cs" class="lang-active">Naše <em>služby</em></span>
+        <span data-lang="en">Our <em>services</em></span>
+        <span data-lang="de">Unsere <em>Leistungen</em></span>
+        <span data-lang="ru">Наши <em>услуги</em></span>
+      </h2>
+    </div>
+    <div class="services-grid">
+      <div class="service-card reveal reveal-delay-1" data-num="01">
+        <div class="service-icon">☕</div>
+        <div class="service-title">
+          <span data-lang="cs" class="lang-active">Kavárna</span>
+          <span data-lang="en">Café</span>
+          <span data-lang="de">Kaffeebar</span>
+          <span data-lang="ru">Кофейня</span>
+        </div>
+        <div class="service-text">
+          <span data-lang="cs" class="lang-active">Espresso, flat white, chemex, V60, cold brew a mnoho dalšího. Náš barista vám připraví dokonalý šálek přesně podle vašich představ. Pracujeme s pražírnou Doubleshot a dalšími lokálními dodavateli.</span>
+          <span data-lang="en">Espresso, flat white, chemex, V60, cold brew and much more. Our barista will prepare the perfect cup exactly to your taste. We work with Doubleshot roastery and other local suppliers.</span>
+          <span data-lang="de">Espresso, Flat White, Chemex, V60, Cold Brew und vieles mehr. Unser Barista bereitet die perfekte Tasse genau nach Ihren Wünschen zu.</span>
+          <span data-lang="ru">Эспрессо, флэт уайт, кемекс, V60, колд брю и многое другое. Наш бариста приготовит идеальную чашку именно по вашему вкусу.</span>
+        </div>
+        <div class="service-tag">
+          <span data-lang="cs" class="lang-active">Specialty Coffee</span>
+          <span data-lang="en">Specialty Coffee</span>
+          <span data-lang="de">Specialty Coffee</span>
+          <span data-lang="ru">Specialty Coffee</span>
+        </div>
+      </div>
+      <div class="service-card reveal reveal-delay-2" data-num="02">
+        <div class="service-icon">🥗</div>
+        <div class="service-title">
+          <span data-lang="cs" class="lang-active">Bistro & Kuchyně</span>
+          <span data-lang="en">Bistro & Kitchen</span>
+          <span data-lang="de">Bistro & Küche</span>
+          <span data-lang="ru">Бистро & Кухня</span>
+        </div>
+        <div class="service-text">
+          <span data-lang="cs" class="lang-active">Snídaně od 7:30, polední menu a celý den lehká jídla. Avocado toast, domácí polévky, saláty, sendviče a sezónní speciality. Vegetariánské a veganské možnosti vždy k dispozici.</span>
+          <span data-lang="en">Breakfast from 7:30, lunch menu, and light meals all day. Avocado toast, homemade soups, salads, sandwiches, and seasonal specialties. Vegetarian and vegan options always available.</span>
+          <span data-lang="de">Frühstück ab 7:30, Mittagsmenü und leichte Gerichte den ganzen Tag. Avocado-Toast, hausgemachte Suppen, Salate, Sandwiches und Saisonspeisen.</span>
+          <span data-lang="ru">Завтраки с 7:30, обеденное меню и лёгкие блюда весь день. Авокадо-тост, домашние супы, салаты, сэндвичи и сезонные специалитеты.</span>
+        </div>
+        <div class="service-tag">
+          <span data-lang="cs" class="lang-active">Denně čerstvé</span>
+          <span data-lang="en">Daily fresh</span>
+          <span data-lang="de">Täglich frisch</span>
+          <span data-lang="ru">Ежедневно свежее</span>
+        </div>
+      </div>
+      <div class="service-card reveal reveal-delay-3" data-num="03">
+        <div class="service-icon">🎂</div>
+        <div class="service-title">
+          <span data-lang="cs" class="lang-active">Dezerty & Pečivo</span>
+          <span data-lang="en">Desserts & Pastries</span>
+          <span data-lang="de">Desserts & Gebäck</span>
+          <span data-lang="ru">Десерты & Выпечка</span>
+        </div>
+        <div class="service-text">
+          <span data-lang="cs" class="lang-active">Domácí dorty, croissanty, medovník, cheesecaky a sezónní sladkosti. Vše připravujeme každý den od rána v naší vlastní kuchyni. Ideální dárek nebo pochoutka k odpolednímu kafe.</span>
+          <span data-lang="en">Homemade cakes, croissants, honey cake, cheesecakes, and seasonal sweets. Everything freshly prepared every morning in our own kitchen. Perfect gift or treat with afternoon coffee.</span>
+          <span data-lang="de">Hausgemachte Kuchen, Croissants, Honigkuchen, Cheesecakes und Saisonsüßigkeiten. Täglich frisch in unserer eigenen Küche zubereitet.</span>
+          <span data-lang="ru">Домашние торты, круассаны, медовик, чизкейки и сезонные сладости. Всё готовится каждое утро на нашей собственной кухне.</span>
+        </div>
+        <div class="service-tag">
+          <span data-lang="cs" class="lang-active">Domácí výroba</span>
+          <span data-lang="en">Homemade</span>
+          <span data-lang="de">Hausgemacht</span>
+          <span data-lang="ru">Домашнее производство</span>
+        </div>
+      </div>
+      <div class="service-card reveal reveal-delay-4" data-num="04">
+        <div class="service-icon">🥂</div>
+        <div class="service-title">
+          <span data-lang="cs" class="lang-active">Nápoje & Bar</span>
+          <span data-lang="en">Drinks & Bar</span>
+          <span data-lang="de">Getränke & Bar</span>
+          <span data-lang="ru">Напитки & Бар</span>
+        </div>
+        <div class="service-text">
+          <span data-lang="cs" class="lang-active">Výběr přírodních vín z českých a světových vinařství, čepované pivo, craft pivo, čaje a limonády. Odpoledne i večer se proměníme ve vinárnu se skvělou náladou.</span>
+          <span data-lang="en">Selection of natural wines from Czech and international wineries, draft and craft beer, teas, and lemonades. Afternoons and evenings we transform into a wine bar with great atmosphere.</span>
+          <span data-lang="de">Auswahl natürlicher Weine aus tschechischen und internationalen Weingütern, Bier vom Fass, Craft-Bier, Tees und Limonaden.</span>
+          <span data-lang="ru">Подборка натуральных вин от чешских и мировых виноделен, разливное и крафтовое пиво, чаи и лимонады. После обеда превращаемся в уютный винный бар.</span>
+        </div>
+        <div class="service-tag">
+          <span data-lang="cs" class="lang-active">Přírodní vína</span>
+          <span data-lang="en">Natural wines</span>
+          <span data-lang="de">Naturweine</span>
+          <span data-lang="ru">Натуральные вина</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MENU ============ -->
+<section id="menu">
+  <div class="container">
+    <div class="menu-header reveal">
+      <div class="section-tag">
+        <span data-lang="cs" class="lang-active">Jídelní & Nápojový lístek</span>
+        <span data-lang="en">Food & Drink Menu</span>
+        <span data-lang="de">Speise- & Getränkekarte</span>
+        <span data-lang="ru">Меню</span>
+      </div>
+      <h2 class="section-heading">
+        <span data-lang="cs" class="lang-active">Náš <em>sortiment</em></span>
+        <span data-lang="en">Our <em>assortment</em></span>
+        <span data-lang="de">Unser <em>Sortiment</em></span>
+        <span data-lang="ru">Наш <em>ассортимент</em></span>
+      </h2>
+    </div>
+
+    <div class="menu-tabs reveal">
+      <button class="menu-tab active" onclick="switchTab('coffee', this)">
+        <span data-lang="cs" class="lang-active">Káva</span>
+        <span data-lang="en">Coffee</span>
+        <span data-lang="de">Kaffee</span>
+        <span data-lang="ru">Кофе</span>
+      </button>
+      <button class="menu-tab" onclick="switchTab('food', this)">
+        <span data-lang="cs" class="lang-active">Jídlo</span>
+        <span data-lang="en">Food</span>
+        <span data-lang="de">Essen</span>
+        <span data-lang="ru">Еда</span>
+      </button>
+      <button class="menu-tab" onclick="switchTab('desserts', this)">
+        <span data-lang="cs" class="lang-active">Dezerty</span>
+        <span data-lang="en">Desserts</span>
+        <span data-lang="de">Desserts</span>
+        <span data-lang="ru">Десерты</span>
+      </button>
+      <button class="menu-tab" onclick="switchTab('drinks', this)">
+        <span data-lang="cs" class="lang-active">Nápoje</span>
+        <span data-lang="en">Drinks</span>
+        <span data-lang="de">Getränke</span>
+        <span data-lang="ru">Напитки</span>
+      </button>
+    </div>
+
+    <!-- COFFEE TAB -->
+    <div class="menu-panel active" id="tab-coffee">
+      <div class="menu-items">
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">Espresso</div>
+            <div class="menu-item-desc">
+              <span data-lang="cs" class="lang-active">Jednoduchý, intenzivní</span>
+              <span data-lang="en">Single, intense</span>
+              <span data-lang="de">Einfach, intensiv</span>
+              <span data-lang="ru">Одиночный, насыщенный</span>
+            </div>
+          </div>
+          <div class="menu-item-price">55 Kč</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">Flat White</div>
+            <div class="menu-item-desc">
+              <span data-lang="cs" class="lang-active">Dvojitý espresso s mikropěnou</span>
+              <span data-lang="en">Double espresso with microfoam</span>
+              <span data-lang="de">Doppelter Espresso mit Mikroschaum</span>
+              <span data-lang="ru">Двойной эспрессо с микропеной</span>
+            </div>
+          </div>
+          <div class="menu-item-price">85 Kč</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">Cappuccino</div>
+            <div class="menu-item-desc">
+              <span data-lang="cs" class="lang-active">Klasická italská příprava</span>
+              <span data-lang="en">Classic Italian preparation</span>
+              <span data-lang="de">Klassische italienische Zubereitung</span>
+              <span data-lang="ru">Классическое итальянское приготовление</span>
+            </div>
+          </div>
+          <div class="menu-item-price">80 Kč</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">V60 Pour Over</div>
+            <div class="menu-item-desc">
+              <span data-lang="cs" class="lang-active">Filtrovaná káva, single origin</span>
+              <span data-lang="en">Filter coffee, single origin</span>
+              <span data-lang="de">Filterkaffee, Single Origin</span>
+              <span data-lang="ru">Фильтр-кофе, single origin</span>
+            </div>
+          </div>
+          <div class="menu-item-price">95 Kč</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">Cold Brew</div>
+            <div class="menu-item-desc">
+              <span data-lang="cs" class="lang-active">Studený výluh, 18 hodin</span>
+              <span data-lang="en">Cold extraction, 18 hours</span>
+              <span data-lang="de">Kalter Aufguss, 18 Stunden</span>
+              <span data-lang="ru">Холодное заваривание, 18 часов</span>
+            </div>
+          </div>
+          <div class="menu-item-price">90 Kč</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">Matcha Latte</div>
+            <div class="menu-item-desc">
+              <span data-lang="cs" class="lang-active">Ceremonial grade matcha</span>
+              <span data-lang="en">Ceremonial grade matcha</span>
+              <span data-lang="de">Ceremonial Grade Matcha</span>
+              <span data-lang="ru">Ceremonial grade матча</span>
+            </div>
+          </div>
+          <div class="menu-item-price">95 Kč</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOD TAB -->
+    <div class="menu-panel" id="tab-food">
+      <div class="menu-items">
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">
+              <span data-lang="cs" class="lang-active">Avocado Toast</span>
+              <span data-lang="en">Avocado Toast</span>
+              <span data-lang="de">Avocado-Toast</span>
+              <span data-lang="ru">Авокадо-тост</span>
+            </div>
+            <div class="menu-item-desc">
+              <span data-lang="cs" class="lang-active">Kváskový chléb, vejce, cherry rajčata</span>
+              <span data-lang="en">Sourdough bread, egg, cherry tomatoes</span>
+              <span data-lang="de">Sauerteigbrot, Ei, Kirschtomaten</span>
+              <span data-lang="ru">Ржаной хлеб, яйцо, черри-томаты</span>
+            </div>
+          </div>
+          <div class="menu-item-price">195 Kč</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">
+              <span data-lang="cs" class="lang-active">Polední polévka</span>
+              <span data-lang="en">Lunch soup</span>
+              <span data-lang="de">Mittagssuppe</span>
+              <span data-lang="ru">Суп дня</span>
+            </div>
+            <div class="menu-item-desc">
+              <span data-lang="cs" class="lang-active">Sezónní, denně čerstvá</span>
+              <span data-lang="en">Seasonal, freshly made daily</span>
+              <span data-lang="de">Saisonal, täglich frisch</span>
+              <span data-lang="ru">Сезонный, свежий каждый день</span>
+            </div>
+          </div>
+          <div class="menu-item-price">120 Kč</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">
+              <span data-lang="cs" class="lang-active">Club Sandwich</span>
+              <span data-lang="en">Club Sandwich</span>
+              <span data-lang="de">Club-Sandwich</span>
+              <span data-lang="ru">Клубный сэндвич</span>
+            </div>
+            <div class="menu-item-desc">
+              <span data-lang="cs" class="lang-active">Kuřecí, slanina, salát, rajče</span>
+              <span data-lang="en">Chicken, bacon, lettuce, tomato</span>
+              <span data-lang="de">Hühnchen, Speck, Salat, Tomate</span>
+              <span data-lang="ru">Курица, бекон, салат, помидор</span>
+            </div>
+          </div>
+          <div class="menu-item-price">225 Kč</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">
+              <span data-lang="cs" class="lang-active">Bowl se zeleninou</span>
+              <span data-lang="en">Vegetable Bowl</span>
+              <span data-lang="de">Gemüse-Bowl</span>
+              <span data-lang="ru">Овощной боул</span>
+            </div>
+            <div class="menu-item-desc">
+              <span data-lang="cs" class="lang-active">Quinoa, pečená zelenina, tahini</span>
+              <span data-lang="en">Quinoa, roasted vegetables, tahini</span>
+              <span data-lang="de">Quinoa, geröstetes Gemüse, Tahini</span>
+              <span data-lang="ru">Киноа, запечённые овощи, тахини</span>
+            </div>
+          </div>
+          <div class="menu-item-price">210 Kč</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">
+              <span data-lang="cs" class="lang-active">Vajíčka Benedikt</span>
+              <span data-lang="en">Eggs Benedict</span>
+              <span data-lang="de">Eggs Benedict</span>
+              <span data-lang="ru">Яйца Бенедикт</span>
+            </div>
+            <div class="menu-item-desc">
+              <span data-lang="cs" class="lang-active">Pošírovaná vejce, hollandaise</span>
+              <span data-lang="en">Poached eggs, hollandaise</span>
+              <span data-lang="de">Pochierte Eier, Hollandaise</span>
+              <span data-lang="ru">Пашот, голландский соус</span>
+            </div>
+          </div>
+          <div class="menu-item-price">235 Kč</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">
+              <span data-lang="cs" class="lang-active">Caesar salát</span>
+              <span data-lang="en">Caesar Salad</span>
+              <span data-lang="de">Caesar-Salat</span>
+              <span data-lang="ru">Салат Цезарь</span>
+            </div>
+            <div class="menu-item-desc">
+              <span data-lang="cs" class="lang-active">Romaine, parmezán, croutons</span>
+              <span data-lang="en">Romaine, parmesan, croutons</span>
+              <span data-lang="de">Romanasalat, Parmesan, Croutons</span>
+              <span data-lang="ru">Романо, пармезан, крутоны</span>
+            </div>
+          </div>
+          <div class="menu-item-price">195 Kč</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DESSERTS TAB -->
+    <div class="menu-panel" id="tab-desserts">
+      <div class="menu-items">
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">
+              <span data-lang="cs" class="lang-active">Medovník</span>
+              <span data-lang="en">Honey Cake</span>
+              <span data-lang="de">Honigkuchen</span>
+              <span data-lang="ru">Медовик</span>
+            </div>
+            <div class="menu-item-desc">
+              <span data-lang="cs" class="lang-active">Tradiční český dezert</span>
+              <span data-lang="en">Traditional Czech dessert</span>
+              <span data-lang="de">Traditionelles tschechisches Dessert</span>
+              <span data-lang="ru">Традиционный чешский десерт</span>
+            </div>
+          </div>
+          <div class="menu-item-price">120 Kč</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">
+              <span data-lang="cs" class="lang-active">Cheesecake</span>
+              <span data-lang="en">Cheesecake</span>
+              <span data-lang="de">Käsekuchen</span>
+              <span data-lang="ru">Чизкейк</span>
+            </div>
+            <div class="menu-item-desc">
+              <span data-lang="cs" class="lang-active">Sezónní ovoce, domácí výroba</span>
+              <span data-lang="en">Seasonal fruit, homemade</span>
+              <span data-lang="de">Saisonfrüchte, hausgemacht</span>
+              <span data-lang="ru">Сезонные фрукты, домашний</span>
+            </div>
+          </div>
+          <div class="menu-item-price">135 Kč</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">
+              <span data-lang="cs" class="lang-active">Croissant s máslem</span>
+              <span data-lang="en">Butter Croissant</span>
+              <span data-lang="de">Butter-Croissant</span>
+              <span data-lang="ru">Круассан со сливочным маслом</span>
+            </div>
+            <div class="menu-item-desc">
+              <span data-lang="cs" class="lang-active">Každý den čerstvě upečený</span>
+              <span data-lang="en">Freshly baked every day</span>
+              <span data-lang="de">Täglich frisch gebacken</span>
+              <span data-lang="ru">Свежеиспечённый каждый день</span>
+            </div>
+          </div>
+          <div class="menu-item-price">75 Kč</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">
+              <span data-lang="cs" class="lang-active">Čokoládový fondán</span>
+              <span data-lang="en">Chocolate Fondant</span>
+              <span data-lang="de">Schokoladen-Fondant</span>
+              <span data-lang="ru">Шоколадный фондан</span>
+            </div>
+            <div class="menu-item-desc">
+              <span data-lang="cs" class="lang-active">Teplý, s vanilkovou zmrzlinou</span>
+              <span data-lang="en">Warm, with vanilla ice cream</span>
+              <span data-lang="de">Warm, mit Vanilleeis</span>
+              <span data-lang="ru">Тёплый, с ванильным мороженым</span>
+            </div>
+          </div>
+          <div class="menu-item-price">155 Kč</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">
+              <span data-lang="cs" class="lang-active">Tiramisu</span>
+              <span data-lang="en">Tiramisu</span>
+              <span data-lang="de">Tiramisu</span>
+              <span data-lang="ru">Тирамису</span>
+            </div>
+            <div class="menu-item-desc">
+              <span data-lang="cs" class="lang-active">Klasická italská verze</span>
+              <span data-lang="en">Classic Italian version</span>
+              <span data-lang="de">Klassische italienische Version</span>
+              <span data-lang="ru">Классический итальянский вариант</span>
+            </div>
+          </div>
+          <div class="menu-item-price">140 Kč</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">
+              <span data-lang="cs" class="lang-active">Ovocný tart</span>
+              <span data-lang="en">Fruit Tart</span>
+              <span data-lang="de">Obsttarte</span>
+              <span data-lang="ru">Фруктовый тарт</span>
+            </div>
+            <div class="menu-item-desc">
+              <span data-lang="cs" class="lang-active">Sezónní ovoce, crème pâtissière</span>
+              <span data-lang="en">Seasonal fruit, pastry cream</span>
+              <span data-lang="de">Saisonfrüchte, Crème pâtissière</span>
+              <span data-lang="ru">Сезонные фрукты, заварной крем</span>
+            </div>
+          </div>
+          <div class="menu-item-price">130 Kč</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DRINKS TAB -->
+    <div class="menu-panel" id="tab-drinks">
+      <div class="menu-items">
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">
+              <span data-lang="cs" class="lang-active">Čepované pivo</span>
+              <span data-lang="en">Draft Beer</span>
+              <span data-lang="de">Bier vom Fass</span>
+              <span data-lang="ru">Разливное пиво</span>
+            </div>
+            <div class="menu-item-desc">
+              <span data-lang="cs" class="lang-active">Lokální pivovar, 0,5 l</span>
+              <span data-lang="en">Local brewery, 0.5 l</span>
+              <span data-lang="de">Lokale Brauerei, 0,5 l</span>
+              <span data-lang="ru">Местная пивоварня, 0,5 л</span>
+            </div>
+          </div>
+          <div class="menu-item-price">75 Kč</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">
+              <span data-lang="cs" class="lang-active">Přírodní víno</span>
+              <span data-lang="en">Natural Wine</span>
+              <span data-lang="de">Naturwein</span>
+              <span data-lang="ru">Натуральное вино</span>
+            </div>
+            <div class="menu-item-desc">
+              <span data-lang="cs" class="lang-active">Sklenka, výběr dle sezóny</span>
+              <span data-lang="en">Glass, seasonal selection</span>
+              <span data-lang="de">Glas, Saisonauswahl</span>
+              <span data-lang="ru">Бокал, сезонный выбор</span>
+            </div>
+          </div>
+          <div class="menu-item-price">120 Kč</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">
+              <span data-lang="cs" class="lang-active">Domácí limonáda</span>
+              <span data-lang="en">Homemade Lemonade</span>
+              <span data-lang="de">Hausgemachte Limonade</span>
+              <span data-lang="ru">Домашний лимонад</span>
+            </div>
+            <div class="menu-item-desc">
+              <span data-lang="cs" class="lang-active">Čerstvé ovoce, bylinky</span>
+              <span data-lang="en">Fresh fruit, herbs</span>
+              <span data-lang="de">Frisches Obst, Kräuter</span>
+              <span data-lang="ru">Свежие фрукты, травы</span>
+            </div>
+          </div>
+          <div class="menu-item-price">85 Kč</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">
+              <span data-lang="cs" class="lang-active">Bylinkový čaj</span>
+              <span data-lang="en">Herbal Tea</span>
+              <span data-lang="de">Kräutertee</span>
+              <span data-lang="ru">Травяной чай</span>
+            </div>
+            <div class="menu-item-desc">
+              <span data-lang="cs" class="lang-active">Výběr, vždy čerstvě uvařený</span>
+              <span data-lang="en">Selection, freshly brewed</span>
+              <span data-lang="de">Auswahl, frisch gebrüht</span>
+              <span data-lang="ru">Выбор, всегда свежезаваренный</span>
+            </div>
+          </div>
+          <div class="menu-item-price">70 Kč</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">
+              <span data-lang="cs" class="lang-active">Horká čokoláda</span>
+              <span data-lang="en">Hot Chocolate</span>
+              <span data-lang="de">Heiße Schokolade</span>
+              <span data-lang="ru">Горячий шоколад</span>
+            </div>
+            <div class="menu-item-desc">
+              <span data-lang="cs" class="lang-active">Belgická, plnotučné mléko</span>
+              <span data-lang="en">Belgian, whole milk</span>
+              <span data-lang="de">Belgisch, Vollmilch</span>
+              <span data-lang="ru">Бельгийский, цельное молоко</span>
+            </div>
+          </div>
+          <div class="menu-item-price">95 Kč</div>
+        </div>
+        <div class="menu-item">
+          <div>
+            <div class="menu-item-name">Aperol Spritz</div>
+            <div class="menu-item-desc">
+              <span data-lang="cs" class="lang-active">Aperol, prosecco, soda</span>
+              <span data-lang="en">Aperol, prosecco, soda</span>
+              <span data-lang="de">Aperol, Prosecco, Soda</span>
+              <span data-lang="ru">Апероль, просекко, содовая</span>
+            </div>
+          </div>
+          <div class="menu-item-price">145 Kč</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section id="contact">
+  <div class="container">
+    <div class="reveal" style="margin-bottom: 60px;">
+      <div class="section-tag">
+        <span data-lang="cs" class="lang-active">Kde nás najdete</span>
+        <span data-lang="en">Find us</span>
+        <span data-lang="de">Finden Sie uns</span>
+        <span data-lang="ru">Как нас найти</span>
+      </div>
+      <h2 class="section-heading">
+        <span data-lang="cs" class="lang-active">Kontakt & <em>Rezervace</em></span>
+        <span data-lang="en">Contact & <em>Reservations</em></span>
+        <span data-lang="de">Kontakt & <em>Reservierung</em></span>
+        <span data-lang="ru">Контакты & <em>Бронирование</em></span>
+      </h2>
+    </div>
+    <div class="contact-grid">
+      <div class="reveal-left">
+        <div class="contact-detail">
+          <div class="contact-icon">📍</div>
+          <div>
+            <div class="contact-label">
+              <span data-lang="cs" class="lang-active">Adresa</span>
+              <span data-lang="en">Address</span>
+              <span data-lang="de">Adresse</span>
+              <span data-lang="ru">Адрес</span>
+            </div>
+            <div class="contact-value">Praha, Česká republika<br><small style="font-size:14px; color:var(--muted);">50.0889°N, 14.4327°E</small></div>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-icon">📞</div>
+          <div>
+            <div class="contact-label">
+              <span data-lang="cs" class="lang-active">Telefon</span>
+              <span data-lang="en">Phone</span>
+              <span data-lang="de">Telefon</span>
+              <span data-lang="ru">Телефон</span>
+            </div>
+            <div class="contact-value">+420 XXX XXX XXX</div>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-icon">✉️</div>
+          <div>
+            <div class="contact-label">Email</div>
+            <div class="contact-value">hello@mala.kerka</div>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-icon">📱</div>
+          <div>
+            <div class="contact-label">Instagram</div>
+            <div class="contact-value">@mala.kerka</div>
+          </div>
+        </div>
+        <div class="hours-grid">
+          <div class="hours-item">
+            <div class="hours-day">
+              <span data-lang="cs" class="lang-active">Po — Pá</span>
+              <span data-lang="en">Mon — Fri</span>
+              <span data-lang="de">Mo — Fr</span>
+              <span data-lang="ru">Пн — Пт</span>
+            </div>
+            <div class="hours-time">07:30 — 22:00</div>
+          </div>
+          <div class="hours-item">
+            <div class="hours-day">
+              <span data-lang="cs" class="lang-active">So — Ne</span>
+              <span data-lang="en">Sat — Sun</span>
+              <span data-lang="de">Sa — So</span>
+              <span data-lang="ru">Сб — Вс</span>
+            </div>
+            <div class="hours-time">09:00 — 23:00</div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal-right" style="display:flex; flex-direction:column; gap:20px;">
+        <div style="padding:40px; background:var(--warm);">
+          <p class="body-text" style="margin:0;">
+            <span data-lang="cs" class="lang-active">Pro rezervaci stolu nebo soukromé akce nás kontaktujte telefonicky nebo e-mailem. Rádi vám připravíme nezapomenutelný zážitek.</span>
+            <span data-lang="en">For table reservations or private events, contact us by phone or email. We'll be happy to prepare an unforgettable experience for you.</span>
+            <span data-lang="de">Für Tischreservierungen oder private Veranstaltungen kontaktieren Sie uns telefonisch oder per E-Mail.</span>
+            <span data-lang="ru">Для бронирования столика или частных мероприятий свяжитесь с нами по телефону или электронной почте.</span>
+          </p>
+        </div>
+        <a href="mailto:hello@mala.kerka" class="hero-cta" style="align-self: flex-start; text-decoration:none; display:inline-flex;">
+          <span data-lang="cs" class="lang-active">Napište nám</span>
+          <span data-lang="en">Write us</span>
+          <span data-lang="de">Schreiben Sie uns</span>
+          <span data-lang="ru">Написать нам</span>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- GOOGLE MAP -->
+  <div class="map-section">
+    <div class="map-overlay">
+      <div class="map-overlay-title">mala<span style="color:var(--gold)">.</span>kerka</div>
+      <div class="map-overlay-addr">Praha, Česká republika</div>
+    </div>
+    <iframe
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2560.3!2d14.430722499999999!3d50.088925100000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x470b9539d9944391%3A0xcaa1e27822b793f9!2smala.kerka!5e0!3m2!1scs!2scz!4v1700000000000!5m2!1scs!2scz"
+      allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">mala<span>.</span>kerka</div>
+      <div class="footer-links">
+        <a href="#about">
+          <span data-lang="cs" class="lang-active">O nás</span>
+          <span data-lang="en">About</span>
+          <span data-lang="de">Über uns</span>
+          <span data-lang="ru">О нас</span>
+        </a>
+        <a href="#advantages">
+          <span data-lang="cs" class="lang-active">Přednosti</span>
+          <span data-lang="en">Advantages</span>
+          <span data-lang="de">Vorteile</span>
+          <span data-lang="ru">Преимущества</span>
+        </a>
+        <a href="#services">
+          <span data-lang="cs" class="lang-active">Služby</span>
+          <span data-lang="en">Services</span>
+          <span data-lang="de">Leistungen</span>
+          <span data-lang="ru">Услуги</span>
+        </a>
+        <a href="#menu">Menu</a>
+        <a href="#contact">
+          <span data-lang="cs" class="lang-active">Kontakt</span>
+          <span data-lang="en">Contact</span>
+          <span data-lang="de">Kontakt</span>
+          <span data-lang="ru">Контакты</span>
+        </a>
+      </div>
+    </div>
+    <div class="footer-copy">
+      © 2025 mala.kerka · Praha ·
+      <span data-lang="cs" class="lang-active">Všechna práva vyhrazena</span>
+      <span data-lang="en">All rights reserved</span>
+      <span data-lang="de">Alle Rechte vorbehalten</span>
+      <span data-lang="ru">Все права защищены</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // CURSOR
+  const cursor = document.getElementById('cursor');
+  const follower = document.getElementById('cursorFollower');
+  let mx = 0, my = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+    follower.style.left = mx + 'px';
+    follower.style.top = my + 'px';
+  });
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.width = '20px'; cursor.style.height = '20px';
+      follower.style.width = '60px'; follower.style.height = '60px';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.width = '12px'; cursor.style.height = '12px';
+      follower.style.width = '40px'; follower.style.height = '40px';
+    });
+  });
+
+  // LOADER
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.getElementById('loader').classList.add('hide');
+      document.getElementById('heroContent').classList.add('visible');
+      setTimeout(() => {
+        document.getElementById('loader').style.display = 'none';
+      }, 1000);
+    }, 1800);
+  });
+
+  // SCROLL - LANG BAR
+  window.addEventListener('scroll', () => {
+    const lb = document.getElementById('langBar');
+    if (window.scrollY > 50) lb.classList.add('scrolled');
+    else lb.classList.remove('scrolled');
+  });
+
+  // REVEAL ON SCROLL
+  const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('revealed'); }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(r => observer.observe(r));
+
+  // LANGUAGE SWITCHER
+  let currentLang = 'cs';
+  function setLang(lang) {
+    currentLang = lang;
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-lang]').forEach(el => {
+      el.classList.toggle('lang-active', el.dataset.lang === lang);
+    });
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.textContent.trim().toLowerCase() === lang);
+    });
+  }
+
+  // MENU TABS
+  function switchTab(tabId, btn) {
+    document.querySelectorAll('.menu-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.menu-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + tabId).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // Smooth scroll nav
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+</script>
+</body>
+</html>
