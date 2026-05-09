@@ -3,1853 +3,1226 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>mala.kerka — Praha</title>
+<title>mala.kerka — Tattoo Studio Praha</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --cream: #f5f0e8;
-    --warm: #e8dfc8;
-    --dark: #1a1510;
-    --espresso: #2c1f14;
-    --gold: #c9a84c;
-    --gold-light: #e8c96a;
-    --copper: #b5651d;
-    --muted: #7a6a58;
-    --text: #3a2e24;
-  }
+:root{
+  --bg:#080808;
+  --bg2:#0f0f0f;
+  --bg3:#161616;
+  --white:#f5f0e8;
+  --cream:#e8dfc8;
+  --red:#c0392b;
+  --red2:#e74c3c;
+  --red-glow:rgba(192,57,43,0.3);
+  --muted:#666;
+  --border:rgba(245,240,232,0.1);
+  --border-red:rgba(192,57,43,0.4);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--white);font-family:'Space Mono',monospace;overflow-x:hidden;cursor:none}
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* CURSOR */
+#cur{position:fixed;width:6px;height:6px;background:var(--red);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s}
+#cur-r{position:fixed;width:32px;height:32px;border:1px solid rgba(192,57,43,0.6);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .15s ease}
+body:has(a:hover) #cur-r,body:has(button:hover) #cur-r{width:52px;height:52px;border-color:var(--red)}
 
-  html { scroll-behavior: smooth; overflow-x: hidden; }
+/* LOADER */
+#loader{
+  position:fixed;inset:0;background:var(--bg);z-index:10000;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px;
+}
+.l-txt{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(60px,15vw,160px);
+  letter-spacing:0.08em;
+  color:var(--white);
+  clip-path:inset(0 100% 0 0);
+  animation:clipReveal 1.2s 0.3s cubic-bezier(0.77,0,0.175,1) forwards;
+}
+.l-txt span{color:var(--red)}
+.l-dot{
+  width:0;height:2px;
+  background:linear-gradient(90deg,var(--red),transparent);
+  animation:dotGrow 0.8s 1.2s ease forwards;
+}
+.l-sub{
+  font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:var(--muted);
+  opacity:0;animation:fadeUp 0.6s 1.6s forwards;
+}
+@keyframes clipReveal{to{clip-path:inset(0 0% 0 0)}}
+@keyframes dotGrow{to{width:200px}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--cream);
-    color: var(--text);
-    cursor: none;
-  }
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  padding:18px 40px;display:flex;align-items:center;justify-content:space-between;
+  background:rgba(8,8,8,0.85);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  transition:padding .4s;
+}
+.nav-logo{
+  font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:0.15em;
+  color:var(--white);text-decoration:none;
+}
+.nav-logo em{color:var(--red);font-style:normal}
+.nav-links{display:flex;gap:28px;list-style:none}
+.nav-links a{
+  font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);
+  text-decoration:none;transition:color .3s;position:relative;
+}
+.nav-links a::after{
+  content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;
+  background:var(--red);transition:width .3s;
+}
+.nav-links a:hover{color:var(--white)}
+.nav-links a:hover::after{width:100%}
+.nav-right{display:flex;align-items:center;gap:20px}
+.lang{display:flex;gap:6px}
+.lb{
+  font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.2em;
+  padding:5px 10px;border:1px solid var(--border);background:none;
+  color:var(--muted);cursor:pointer;transition:all .3s;text-transform:uppercase;
+}
+.lb:hover,.lb.active{border-color:var(--red);color:var(--red);background:rgba(192,57,43,0.1)}
+.burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
+.burger span{width:22px;height:1px;background:var(--white);transition:all .3s;display:block}
+.burger.open span:nth-child(1){transform:rotate(45deg) translate(4px,4px)}
+.burger.open span:nth-child(2){opacity:0}
+.burger.open span:nth-child(3){transform:rotate(-45deg) translate(4px,-4px)}
 
-  /* CUSTOM CURSOR */
-  .cursor {
-    position: fixed; width: 12px; height: 12px;
-    background: var(--gold); border-radius: 50%;
-    pointer-events: none; z-index: 10000;
-    transform: translate(-50%, -50%);
-    transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
-  }
-  .cursor-follower {
-    position: fixed; width: 40px; height: 40px;
-    border: 1px solid var(--gold); border-radius: 50%;
-    pointer-events: none; z-index: 9999;
-    transform: translate(-50%, -50%);
-    transition: left 0.12s ease-out, top 0.12s ease-out, width 0.3s, height 0.3s;
-    opacity: 0.6;
-  }
-  body:hover .cursor { opacity: 1; }
+/* MOBILE NAV */
+.mnav{
+  display:none;position:fixed;inset:0;background:var(--bg);z-index:999;
+  flex-direction:column;align-items:center;justify-content:center;gap:36px;
+  opacity:0;pointer-events:none;transition:opacity .4s;
+}
+.mnav.open{opacity:1;pointer-events:all}
+.mnav a{
+  font-family:'Bebas Neue',sans-serif;font-size:40px;letter-spacing:0.12em;
+  color:var(--white);text-decoration:none;transition:color .3s;
+}
+.mnav a:hover{color:var(--red)}
+.mnav .mlang{display:flex;gap:10px;margin-top:12px}
 
-  /* NOISE OVERLAY */
-  body::before {
-    content: '';
-    position: fixed; inset: 0; z-index: 1;
-    opacity: 0.03;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    pointer-events: none;
-  }
+/* NOISE OVERLAY */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:9;
+  opacity:0.025;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
 
-  /* LANGUAGE SWITCHER */
-  .lang-bar {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-    display: flex; justify-content: flex-end; align-items: center;
-    padding: 14px 40px;
-    background: rgba(245,240,232,0.85);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(201,168,76,0.2);
-    transition: background 0.3s;
-  }
-  .lang-bar.scrolled { background: rgba(245,240,232,0.97); }
-  .lang-btn {
-    background: none; border: none; cursor: pointer;
-    font-family: 'DM Sans', sans-serif; font-size: 11px;
-    letter-spacing: 0.15em; text-transform: uppercase;
-    color: var(--muted); padding: 4px 10px;
-    transition: color 0.2s;
-  }
-  .lang-btn:hover, .lang-btn.active { color: var(--gold); }
-  .lang-btn + .lang-btn { border-left: 1px solid rgba(122,106,88,0.3); }
-  .brand-nav {
-    margin-right: auto;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 20px; font-weight: 400;
-    letter-spacing: 0.05em; color: var(--espresso);
-    text-decoration: none;
-  }
+/* HERO */
+#hero{
+  height:100vh;min-height:600px;position:relative;
+  display:flex;align-items:flex-end;justify-content:flex-start;
+  overflow:hidden;padding:0 40px 80px;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 50% 70% at 70% 40%,rgba(192,57,43,0.12) 0%,transparent 60%),
+    radial-gradient(ellipse 80% 50% at 20% 80%,rgba(192,57,43,0.06) 0%,transparent 70%),
+    var(--bg);
+}
+.hero-lines{
+  position:absolute;inset:0;overflow:hidden;
+}
+.hero-lines::before,.hero-lines::after{
+  content:'';position:absolute;
+  background:linear-gradient(180deg,transparent,rgba(192,57,43,0.15),transparent);
+  width:1px;top:0;bottom:0;
+}
+.hero-lines::before{left:20%}
+.hero-lines::after{right:30%}
+.cross-hair{
+  position:absolute;top:50%;left:70%;transform:translate(-50%,-50%);
+  width:100px;height:100px;opacity:0.15;animation:rotateSlow 20s linear infinite;
+}
+.cross-hair::before,.cross-hair::after{content:'';position:absolute;background:var(--red)}
+.cross-hair::before{width:1px;height:100%;left:50%;transform:translateX(-50%)}
+.cross-hair::after{height:1px;width:100%;top:50%;transform:translateY(-50%)}
+@keyframes rotateSlow{to{transform:translate(-50%,-50%) rotate(360deg)}}
+.big-dot{
+  position:absolute;right:25%;top:40%;width:300px;height:300px;
+  border-radius:50%;background:radial-gradient(var(--red-glow),transparent 70%);
+  filter:blur(40px);animation:pulse 4s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:0.5;transform:scale(1)}50%{opacity:1;transform:scale(1.1)}}
 
-  /* ============================
-     INTRO / HERO — OPENING ANIMATION
-  ============================ */
-  #loader {
-    position: fixed; inset: 0; z-index: 9000;
-    background: var(--espresso);
-    display: flex; align-items: center; justify-content: center;
-    flex-direction: column;
-    transition: opacity 0.8s ease, transform 0.8s ease;
-  }
-  #loader.hide { opacity: 0; pointer-events: none; transform: scale(1.05); }
+.hero-content{position:relative;z-index:2;max-width:800px}
+.hero-tag{
+  font-size:10px;letter-spacing:0.4em;text-transform:uppercase;
+  color:var(--red);margin-bottom:20px;
+  opacity:0;animation:fadeUp 0.7s 3s forwards;
+}
+.hero-h1{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(72px,16vw,200px);
+  line-height:0.9;letter-spacing:0.02em;
+  color:var(--white);margin-bottom:16px;
+  opacity:0;animation:clipReveal 1.2s 3.2s cubic-bezier(0.77,0,0.175,1) forwards;
+  clip-path:inset(0 100% 0 0);
+}
+.hero-h1 span{
+  color:transparent;-webkit-text-stroke:1px rgba(245,240,232,0.3);
+}
+.hero-h2{
+  font-family:'Playfair Display',serif;font-style:italic;
+  font-size:clamp(20px,3.5vw,42px);color:var(--cream);
+  margin-bottom:40px;
+  opacity:0;animation:fadeUp 0.8s 3.6s forwards;
+}
+.hero-cta{
+  display:flex;gap:16px;flex-wrap:wrap;
+  opacity:0;animation:fadeUp 0.7s 3.9s forwards;
+}
+.btn-r{
+  font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.25em;
+  text-transform:uppercase;padding:16px 36px;background:var(--red);
+  color:var(--white);text-decoration:none;border:none;cursor:pointer;
+  position:relative;overflow:hidden;transition:all .4s;display:inline-block;
+}
+.btn-r::before{
+  content:'';position:absolute;inset:0;background:var(--red2);
+  transform:translateX(-100%);transition:transform .4s;
+}
+.btn-r:hover::before{transform:translateX(0)}
+.btn-r span{position:relative}
+.btn-o{
+  font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.25em;
+  text-transform:uppercase;padding:16px 36px;background:transparent;
+  color:var(--white);text-decoration:none;border:1px solid rgba(245,240,232,0.3);
+  transition:all .4s;display:inline-block;cursor:pointer;
+}
+.btn-o:hover{border-color:var(--red);color:var(--red)}
+.scroll-ind{
+  position:absolute;bottom:32px;right:40px;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  opacity:0;animation:fadeIn 1s 4.2s forwards;
+}
+.scroll-ind span{font-size:8px;letter-spacing:0.3em;text-transform:uppercase;color:var(--muted)}
+.scroll-line{width:1px;height:60px;background:linear-gradient(var(--muted),transparent);animation:scrollPulse 2s ease-in-out infinite}
+@keyframes scrollPulse{0%,100%{opacity:0.4}50%{opacity:1}}
 
-  .loader-logo {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(48px, 10vw, 100px);
-    color: var(--cream);
-    letter-spacing: 0.08em;
-    overflow: hidden;
-    display: flex; gap: 0;
-  }
-  .loader-logo span {
-    display: inline-block;
-    transform: translateY(120%);
-    opacity: 0;
-    animation: riseUp 0.8s cubic-bezier(.22,1,.36,1) forwards;
-  }
-  .loader-logo span:nth-child(1) { animation-delay: 0.1s; }
-  .loader-logo span:nth-child(2) { animation-delay: 0.15s; }
-  .loader-logo span:nth-child(3) { animation-delay: 0.2s; }
-  .loader-logo span:nth-child(4) { animation-delay: 0.25s; }
-  .loader-logo span:nth-child(5) { animation-delay: 0.3s; }
-  .loader-logo span:nth-child(6) { animation-delay: 0.35s; }
-  .loader-logo span:nth-child(7) { animation-delay: 0.4s; }
-  .loader-logo span:nth-child(8) { animation-delay: 0.45s; }
-  .loader-logo span:nth-child(9) { animation-delay: 0.5s; }
-  .loader-logo span:nth-child(10) { animation-delay: 0.55s; }
-  .loader-dot {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(48px, 10vw, 100px);
-    color: var(--gold); animation-delay: 0.3s;
-  }
+/* SECTION BASE */
+section{position:relative;padding:100px 40px}
+.s-label{
+  font-size:9px;letter-spacing:0.45em;text-transform:uppercase;
+  color:var(--red);margin-bottom:16px;display:block;
+}
+.s-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(42px,8vw,100px);
+  letter-spacing:0.04em;line-height:0.95;
+  color:var(--white);margin-bottom:24px;
+}
+.s-title em{color:transparent;-webkit-text-stroke:1px rgba(245,240,232,0.25);font-style:normal}
+.s-text{
+  font-size:13px;line-height:1.9;color:var(--muted);
+  max-width:560px;font-family:'Playfair Display',serif;font-size:16px;
+}
 
-  .loader-line {
-    width: 0; height: 1px; background: var(--gold);
-    margin-top: 20px;
-    animation: expandLine 0.8s ease 0.8s forwards;
-  }
-  .loader-sub {
-    font-family: 'DM Sans', sans-serif; font-size: 11px;
-    letter-spacing: 0.3em; text-transform: uppercase;
-    color: rgba(245,240,232,0.4);
-    margin-top: 16px; opacity: 0;
-    animation: fadeIn 0.6s ease 1.2s forwards;
-  }
-  .loader-progress {
-    position: absolute; bottom: 0; left: 0;
-    height: 2px; background: var(--gold);
-    animation: progress 1.6s cubic-bezier(.4,0,.2,1) forwards;
-  }
+/* REVEAL ANIMATION */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity 0.8s ease,transform 0.8s ease}
+.reveal.visible{opacity:1;transform:none}
+.reveal-l{opacity:0;transform:translateX(-40px);transition:opacity 0.8s ease,transform 0.8s ease}
+.reveal-l.visible{opacity:1;transform:none}
+.reveal-r{opacity:0;transform:translateX(40px);transition:opacity 0.8s ease,transform 0.8s ease}
+.reveal-r.visible{opacity:1;transform:none}
 
-  @keyframes riseUp {
-    to { transform: translateY(0); opacity: 1; }
-  }
-  @keyframes expandLine {
-    to { width: 200px; }
-  }
-  @keyframes fadeIn {
-    to { opacity: 1; }
-  }
-  @keyframes progress {
-    from { width: 0; } to { width: 100%; }
-  }
+/* ABOUT / INTRO */
+#about{background:var(--bg2)}
+.about-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:80px;
+  align-items:center;max-width:1200px;margin:0 auto;
+}
+.about-visual{position:relative}
+.about-frame{
+  width:100%;aspect-ratio:3/4;
+  border:1px solid var(--border);
+  position:relative;overflow:hidden;
+  background:var(--bg3);
+}
+.about-frame-inner{
+  position:absolute;inset:0;
+  background:
+    linear-gradient(135deg,var(--bg3) 0%,#1a0a08 50%,var(--bg3) 100%),
+    radial-gradient(circle at 50% 50%,rgba(192,57,43,0.2),transparent 70%);
+  display:flex;align-items:center;justify-content:center;
+}
+.frame-icon{
+  font-size:120px;opacity:0.06;
+  font-family:'Bebas Neue';letter-spacing:0.05em;color:var(--red);
+  text-align:center;line-height:1;padding:20px;
+}
+.about-corner{
+  position:absolute;width:40px;height:40px;
+  border-color:var(--red);border-style:solid;
+}
+.about-corner.tl{top:-1px;left:-1px;border-width:2px 0 0 2px}
+.about-corner.br{bottom:-1px;right:-1px;border-width:0 2px 2px 0}
+.about-badge{
+  position:absolute;bottom:-20px;right:-20px;
+  width:100px;height:100px;
+  border:1px solid var(--border-red);
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;background:var(--bg);
+  font-size:9px;letter-spacing:0.2em;color:var(--muted);text-align:center;
+  animation:rotateSlow 15s linear infinite;text-transform:uppercase;
+}
+.about-badge strong{font-family:'Bebas Neue';font-size:28px;color:var(--red);letter-spacing:0.05em;display:block}
+.about-num-row{display:flex;gap:32px;margin-top:40px}
+.about-num{border-left:2px solid var(--red);padding-left:16px}
+.about-num strong{font-family:'Bebas Neue';font-size:40px;color:var(--white);letter-spacing:0.05em;display:block}
+.about-num span{font-size:9px;letter-spacing:0.25em;color:var(--muted);text-transform:uppercase}
 
-  /* ============================
-     HERO SECTION
-  ============================ */
-  #hero {
-    min-height: 100vh;
-    position: relative;
-    display: flex; align-items: center; justify-content: center;
-    overflow: hidden;
-    background: var(--espresso);
-  }
+/* WHY / ADVANTAGES */
+#why{background:var(--bg)}
+.why-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  max-width:1200px;margin:60px auto 0;
+  border:1px solid var(--border);
+}
+.why-card{
+  padding:48px 36px;background:var(--bg);
+  border-right:1px solid var(--border);
+  position:relative;overflow:hidden;
+  transition:background .4s;
+}
+.why-card:last-child{border-right:none}
+.why-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(192,57,43,0.08),transparent);
+  opacity:0;transition:opacity .4s;
+}
+.why-card:hover{background:var(--bg2)}
+.why-card:hover::before{opacity:1}
+.why-num{
+  font-family:'Bebas Neue';font-size:64px;
+  color:rgba(192,57,43,0.15);line-height:1;margin-bottom:16px;
+  transition:color .4s;
+}
+.why-card:hover .why-num{color:var(--red)}
+.why-title{
+  font-family:'Playfair Display';font-size:20px;font-weight:700;
+  color:var(--white);margin-bottom:12px;
+}
+.why-text{font-size:13px;line-height:1.8;color:var(--muted);font-family:'Space Mono'}
 
-  .hero-bg {
-    position: absolute; inset: 0;
-    background: radial-gradient(ellipse at 30% 50%, rgba(201,168,76,0.12) 0%, transparent 60%),
-                radial-gradient(ellipse at 80% 20%, rgba(181,101,29,0.08) 0%, transparent 50%),
-                linear-gradient(160deg, #2c1f14 0%, #1a1510 60%, #0d0b08 100%);
-  }
+/* SERVICES */
+#services{background:var(--bg2)}
+.services-header{max-width:1200px;margin:0 auto 60px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:20px}
+.services-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:24px;
+  max-width:1200px;margin:0 auto;
+}
+.service-card{
+  background:var(--bg3);border:1px solid var(--border);
+  padding:40px;position:relative;overflow:hidden;
+  transition:all .4s;cursor:pointer;
+  display:flex;flex-direction:column;gap:16px;
+}
+.service-card::after{
+  content:'';position:absolute;bottom:0;left:0;
+  width:0;height:2px;background:var(--red);
+  transition:width .5s;
+}
+.service-card:hover::after{width:100%}
+.service-card:hover{border-color:var(--border-red);transform:translateY(-4px)}
+.service-icon{font-size:32px;display:block}
+.service-name{
+  font-family:'Bebas Neue';font-size:28px;letter-spacing:0.06em;
+  color:var(--white);
+}
+.service-desc{font-size:12px;line-height:1.8;color:var(--muted)}
+.service-price{
+  font-family:'Space Mono';font-size:11px;letter-spacing:0.2em;
+  color:var(--red);margin-top:auto;
+}
+.service-arrow{
+  position:absolute;top:32px;right:32px;
+  width:32px;height:32px;border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--muted);font-size:16px;
+  transition:all .4s;
+}
+.service-card:hover .service-arrow{border-color:var(--red);color:var(--red);transform:rotate(45deg)}
 
-  /* Animated floating orbs */
-  .orb {
-    position: absolute; border-radius: 50%;
-    filter: blur(80px); pointer-events: none;
-    animation: floatOrb 12s ease-in-out infinite;
-  }
-  .orb-1 {
-    width: 400px; height: 400px;
-    background: radial-gradient(circle, rgba(201,168,76,0.15), transparent 70%);
-    top: -100px; left: -100px; animation-delay: 0s;
-  }
-  .orb-2 {
-    width: 300px; height: 300px;
-    background: radial-gradient(circle, rgba(181,101,29,0.12), transparent 70%);
-    bottom: 100px; right: -50px; animation-delay: -4s;
-  }
-  .orb-3 {
-    width: 250px; height: 250px;
-    background: radial-gradient(circle, rgba(201,168,76,0.08), transparent 70%);
-    top: 50%; left: 50%; animation-delay: -8s;
-  }
-  @keyframes floatOrb {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    33% { transform: translate(30px, -40px) scale(1.1); }
-    66% { transform: translate(-20px, 20px) scale(0.95); }
-  }
+/* PORTFOLIO / ASSORTMENT */
+#portfolio{background:var(--bg)}
+.port-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:3px;
+  max-width:1200px;margin:60px auto 0;
+}
+.port-item{
+  aspect-ratio:3/4;background:var(--bg3);
+  position:relative;overflow:hidden;cursor:pointer;
+}
+.port-item:first-child{grid-column:span 2;grid-row:span 2;aspect-ratio:auto}
+.port-bg{
+  position:absolute;inset:0;transition:transform .6s ease;
+  display:flex;align-items:center;justify-content:center;
+}
+.port-item:hover .port-bg{transform:scale(1.06)}
+.port-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(8,8,8,0.9) 0%,transparent 50%);
+  opacity:0;transition:opacity .4s;
+  display:flex;align-items:flex-end;padding:24px;
+}
+.port-item:hover .port-overlay{opacity:1}
+.port-label{
+  font-family:'Bebas Neue';font-size:18px;letter-spacing:0.1em;
+  color:var(--white);
+}
+.port-sub{font-size:9px;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;margin-top:4px}
+/* Placeholder backgrounds */
+.pb1{background:linear-gradient(135deg,#1a0a08,#2a1510,rgba(192,57,43,0.2))}
+.pb2{background:linear-gradient(135deg,#0a0a12,#12101a,rgba(80,60,120,0.2))}
+.pb3{background:linear-gradient(135deg,#0a120a,#101a10,rgba(40,80,40,0.2))}
+.pb4{background:linear-gradient(135deg,#12100a,#1a1608,rgba(120,100,30,0.2))}
+.pb5{background:linear-gradient(135deg,#0a0a0a,#181818)}
+.pb6{background:linear-gradient(135deg,#14080a,#200e10,rgba(150,30,40,0.2))}
+.pb7{background:linear-gradient(135deg,#080a14,#0e1020,rgba(30,50,150,0.2))}
+.port-ph{
+  font-family:'Bebas Neue';color:rgba(255,255,255,0.04);
+  font-size:80px;letter-spacing:0.05em;text-align:center;padding:20px;
+  line-height:1;
+}
 
-  /* Decorative lines */
-  .hero-lines {
-    position: absolute; inset: 0; overflow: hidden; pointer-events: none;
-  }
-  .hero-lines::before {
-    content: '';
-    position: absolute; top: 50%; left: 50%;
-    width: 600px; height: 600px;
-    border: 1px solid rgba(201,168,76,0.08);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    animation: pulse-ring 4s ease-in-out infinite;
-  }
-  .hero-lines::after {
-    content: '';
-    position: absolute; top: 50%; left: 50%;
-    width: 900px; height: 900px;
-    border: 1px solid rgba(201,168,76,0.04);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    animation: pulse-ring 4s ease-in-out infinite 1s;
-  }
-  @keyframes pulse-ring {
-    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-    50% { transform: translate(-50%, -50%) scale(1.05); opacity: 0.5; }
-  }
+/* TEAM */
+#team{background:var(--bg2)}
+.team-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:32px;
+  max-width:1200px;margin:60px auto 0;
+}
+.team-card{
+  border:1px solid var(--border);background:var(--bg);
+  overflow:hidden;transition:border-color .4s;
+}
+.team-card:hover{border-color:var(--border-red)}
+.team-photo{
+  aspect-ratio:1/1;background:var(--bg3);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.team-photo-bg{
+  position:absolute;inset:0;
+  transition:transform .5s;
+}
+.team-card:hover .team-photo-bg{transform:scale(1.05)}
+.team-ph{
+  font-family:'Bebas Neue';font-size:60px;
+  color:rgba(255,255,255,0.05);position:relative;z-index:2;
+}
+.team-info{padding:24px 28px}
+.team-name{
+  font-family:'Playfair Display';font-size:20px;font-weight:700;
+  color:var(--white);margin-bottom:4px;
+}
+.team-role{font-size:9px;letter-spacing:0.3em;color:var(--red);text-transform:uppercase;margin-bottom:12px}
+.team-bio{font-size:12px;line-height:1.7;color:var(--muted)}
+.team-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.tag{
+  font-size:8px;letter-spacing:0.2em;text-transform:uppercase;
+  padding:4px 10px;border:1px solid var(--border);color:var(--muted);
+}
 
-  .hero-content {
-    position: relative; z-index: 10;
-    text-align: center; padding: 0 24px;
-    opacity: 0; transform: translateY(30px);
-    transition: opacity 1s ease 1.8s, transform 1s ease 1.8s;
-  }
-  .hero-content.visible { opacity: 1; transform: translateY(0); }
+/* PROCESS */
+#process{background:var(--bg)}
+.process-line{
+  max-width:1200px;margin:60px auto 0;
+  position:relative;
+}
+.process-line::before{
+  content:'';position:absolute;top:24px;left:0;right:0;
+  height:1px;background:linear-gradient(90deg,transparent,var(--border-red),transparent);
+}
+.process-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:40px;position:relative}
+.process-step{padding-top:60px;position:relative}
+.process-dot{
+  position:absolute;top:16px;left:0;
+  width:16px;height:16px;border-radius:50%;
+  border:2px solid var(--red);background:var(--bg);
+  transition:background .4s;
+}
+.process-step:hover .process-dot{background:var(--red)}
+.process-n{
+  font-family:'Bebas Neue';font-size:48px;color:rgba(192,57,43,0.2);
+  line-height:1;margin-bottom:12px;
+}
+.process-t{
+  font-family:'Playfair Display';font-size:17px;font-weight:700;
+  color:var(--white);margin-bottom:10px;
+}
+.process-d{font-size:11px;line-height:1.8;color:var(--muted)}
 
-  .hero-eyebrow {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 11px; letter-spacing: 0.35em; text-transform: uppercase;
-    color: var(--gold); margin-bottom: 24px;
-    display: flex; align-items: center; justify-content: center; gap: 16px;
-  }
-  .hero-eyebrow::before, .hero-eyebrow::after {
-    content: ''; flex: 1; max-width: 60px; height: 1px; background: var(--gold); opacity: 0.5;
-  }
+/* CONTACT / CTA BANNER */
+#contact-banner{
+  background:linear-gradient(135deg,#0f0404,#1a0808,var(--bg));
+  border-top:1px solid var(--border-red);
+  border-bottom:1px solid var(--border-red);
+  padding:80px 40px;text-align:center;
+}
+.banner-t{
+  font-family:'Bebas Neue';font-size:clamp(50px,10vw,120px);
+  line-height:1;letter-spacing:0.04em;color:var(--white);
+  margin-bottom:24px;
+}
+.banner-t span{color:var(--red)}
+.banner-sub{font-size:13px;color:var(--muted);margin-bottom:40px;line-height:1.8}
+.banner-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
 
-  .hero-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(64px, 12vw, 140px);
-    font-weight: 300; line-height: 0.9;
-    color: var(--cream);
-    margin-bottom: 8px;
-  }
-  .hero-title em {
-    font-style: italic; color: var(--gold);
-    display: block;
-  }
-  .hero-subtitle {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(16px, 3vw, 22px);
-    font-weight: 300; font-style: italic;
-    color: rgba(245,240,232,0.5);
-    margin: 24px 0 40px;
-    letter-spacing: 0.05em;
-  }
-  .hero-cta {
-    display: inline-flex; align-items: center; gap: 12px;
-    padding: 14px 36px;
-    border: 1px solid var(--gold);
-    color: var(--gold); text-decoration: none;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase;
-    transition: all 0.4s;
-    position: relative; overflow: hidden;
-  }
-  .hero-cta::before {
-    content: ''; position: absolute; inset: 0;
-    background: var(--gold); transform: translateX(-101%);
-    transition: transform 0.4s cubic-bezier(.22,1,.36,1);
-    z-index: -1;
-  }
-  .hero-cta:hover::before { transform: translateX(0); }
-  .hero-cta:hover { color: var(--espresso); }
+/* CONTACT INFO */
+#contact{background:var(--bg2)}
+.contact-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:60px;
+  max-width:1200px;margin:0 auto;align-items:start;
+}
+.contact-items{display:flex;flex-direction:column;gap:28px;margin-top:40px}
+.ci{
+  display:flex;align-items:flex-start;gap:20px;
+  padding:24px;border:1px solid var(--border);background:var(--bg);
+  transition:border-color .4s;
+}
+.ci:hover{border-color:var(--border-red)}
+.ci-icon{
+  width:40px;height:40px;border:1px solid var(--border-red);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;color:var(--red);
+}
+.ci-label{font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.ci-val{font-size:14px;color:var(--white)}
+.hours-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:16px}
+.hrow{
+  padding:10px 14px;background:var(--bg);border:1px solid var(--border);
+  font-size:11px;color:var(--muted);display:flex;justify-content:space-between;
+}
+.hrow span:last-child{color:var(--white)}
 
-  .hero-scroll {
-    position: absolute; bottom: 40px; left: 50%;
-    transform: translateX(-50%);
-    display: flex; flex-direction: column; align-items: center; gap: 8px;
-    color: rgba(245,240,232,0.3);
-    font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase;
-    animation: scrollBounce 2s ease-in-out infinite;
-  }
-  .hero-scroll::after {
-    content: ''; width: 1px; height: 40px;
-    background: linear-gradient(to bottom, var(--gold), transparent);
-  }
-  @keyframes scrollBounce {
-    0%, 100% { transform: translateX(-50%) translateY(0); }
-    50% { transform: translateX(-50%) translateY(8px); }
-  }
+/* MAP */
+#map-section{background:var(--bg);padding:0}
+.map-container{
+  width:100%;height:480px;position:relative;
+  border-top:1px solid var(--border);
+}
+.map-container iframe{
+  width:100%;height:100%;border:0;
+  filter:invert(0.9) hue-rotate(180deg) saturate(0.3) brightness(0.7);
+}
+.map-overlay{
+  position:absolute;top:40px;left:40px;
+  background:rgba(8,8,8,0.92);border:1px solid var(--border-red);
+  padding:24px 28px;max-width:260px;z-index:10;
+}
+.map-name{font-family:'Bebas Neue';font-size:22px;letter-spacing:0.1em;color:var(--white);margin-bottom:4px}
+.map-addr{font-size:11px;color:var(--muted);line-height:1.6}
+.map-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:9px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--red);margin-top:10px;
+}
+.map-badge::before{content:'●';animation:pulse 2s infinite}
 
-  /* ============================
-     ABOUT / INTRO SECTION
-  ============================ */
-  #about {
-    padding: 120px 0;
-    background: var(--cream);
-    position: relative; overflow: hidden;
-  }
-  #about::before {
-    content: 'KERKA';
-    position: absolute; right: -60px; top: 50%;
-    transform: translateY(-50%) rotate(90deg);
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 200px; font-weight: 300;
-    color: rgba(201,168,76,0.04);
-    pointer-events: none; white-space: nowrap;
-    letter-spacing: 0.1em;
-  }
+/* FOOTER */
+footer{
+  background:var(--bg);border-top:1px solid var(--border);
+  padding:48px 40px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;
+}
+.footer-logo{font-family:'Bebas Neue';font-size:28px;letter-spacing:0.12em;color:var(--white)}
+.footer-logo em{color:var(--red);font-style:normal}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap}
+.footer-links a{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .3s}
+.footer-links a:hover{color:var(--red)}
+.footer-copy{font-size:10px;color:var(--muted);letter-spacing:0.15em}
 
-  .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
-  .container-wide { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
+/* DIVIDER LINE */
+.divider{
+  max-width:1200px;margin:0 auto 60px;
+  height:1px;background:linear-gradient(90deg,var(--border-red),transparent);
+}
 
-  .about-grid {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 80px; align-items: center;
-  }
-  .section-tag {
-    font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase;
-    color: var(--gold); margin-bottom: 20px;
-    display: flex; align-items: center; gap: 12px;
-  }
-  .section-tag::before { content: ''; width: 30px; height: 1px; background: var(--gold); }
+/* RESPONSIVE */
+@media(max-width:1024px){
+  .about-grid{grid-template-columns:1fr;gap:48px}
+  .why-grid{grid-template-columns:1fr 1fr}
+  .why-card:nth-child(2){border-right:none}
+  .why-card:nth-child(3){grid-column:span 2;border-right:none;border-top:1px solid var(--border)}
+  .services-grid{grid-template-columns:1fr}
+  .port-grid{grid-template-columns:repeat(2,1fr)}
+  .port-item:first-child{grid-column:span 1;grid-row:span 1}
+  .team-grid{grid-template-columns:1fr 1fr}
+  .process-steps{grid-template-columns:1fr 1fr;gap:24px}
+  .contact-grid{grid-template-columns:1fr}
+}
+@media(max-width:768px){
+  nav{padding:16px 20px}
+  .nav-links{display:none}
+  .burger{display:flex}
+  .mnav{display:flex}
+  section{padding:70px 20px}
+  #hero{padding:0 20px 60px}
+  .hero-h1{font-size:clamp(64px,18vw,120px)}
+  .why-grid{grid-template-columns:1fr}
+  .why-card:nth-child(2){border-right:none;border-top:1px solid var(--border)}
+  .why-card:nth-child(3){grid-column:span 1}
+  .port-grid{grid-template-columns:1fr 1fr}
+  .team-grid{grid-template-columns:1fr}
+  .process-steps{grid-template-columns:1fr}
+  .process-line::before{display:none}
+  .contact-grid{grid-template-columns:1fr}
+  .map-overlay{left:16px;top:16px;max-width:200px;padding:16px}
+  footer{flex-direction:column;align-items:flex-start;padding:32px 20px}
+  #cur,#cur-r{display:none}
+  body{cursor:auto}
+  .scroll-ind{display:none}
+  .about-badge{display:none}
+}
+@media(max-width:480px){
+  .hero-cta{flex-direction:column}
+  .btn-r,.btn-o{text-align:center;width:100%}
+  .about-num-row{gap:16px}
+  .banner-btns{flex-direction:column;align-items:center}
+  .lang{display:none}
+}
 
-  .section-heading {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(36px, 5vw, 60px);
-    font-weight: 300; line-height: 1.1;
-    color: var(--espresso); margin-bottom: 28px;
-  }
-  .section-heading em { font-style: italic; color: var(--copper); }
-
-  .body-text {
-    font-size: 16px; line-height: 1.8;
-    color: var(--muted); margin-bottom: 20px;
-  }
-
-  .about-visual {
-    position: relative;
-  }
-  .about-card {
-    background: var(--espresso);
-    padding: 60px 50px;
-    position: relative; overflow: hidden;
-  }
-  .about-card::before {
-    content: '';
-    position: absolute; top: 0; left: 0;
-    width: 100%; height: 4px;
-    background: linear-gradient(90deg, var(--gold), var(--copper));
-  }
-  .about-card::after {
-    content: '';
-    position: absolute; bottom: -60px; right: -60px;
-    width: 200px; height: 200px;
-    border: 1px solid rgba(201,168,76,0.1);
-    border-radius: 50%;
-  }
-  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
-  .stat-item { }
-  .stat-number {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 52px; font-weight: 300;
-    color: var(--gold); line-height: 1;
-    margin-bottom: 6px;
-  }
-  .stat-label {
-    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
-    color: rgba(245,240,232,0.4);
-  }
-  .about-img-wrap {
-    margin-top: 20px;
-    aspect-ratio: 4/3;
-    background: linear-gradient(135deg, #3d2b1a, #5c3d22);
-    position: relative; overflow: hidden;
-  }
-  .about-img-wrap::before {
-    content: '☕';
-    position: absolute; top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 80px; opacity: 0.08;
-  }
-  /* Decorative corner bracket */
-  .corner-bracket {
-    position: absolute;
-    width: 30px; height: 30px;
-  }
-  .corner-bracket.tl { top: -8px; left: -8px; border-top: 2px solid var(--gold); border-left: 2px solid var(--gold); }
-  .corner-bracket.br { bottom: -8px; right: -8px; border-bottom: 2px solid var(--gold); border-right: 2px solid var(--gold); }
-
-  /* ============================
-     ADVANTAGES / WHY US
-  ============================ */
-  #advantages {
-    padding: 120px 0;
-    background: linear-gradient(160deg, #1a1510 0%, #2c1f14 100%);
-    position: relative; overflow: hidden;
-  }
-  #advantages::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: radial-gradient(ellipse at 20% 50%, rgba(201,168,76,0.06) 0%, transparent 60%),
-                radial-gradient(ellipse at 80% 50%, rgba(181,101,29,0.04) 0%, transparent 60%);
-  }
-
-  .adv-header { text-align: center; margin-bottom: 80px; }
-  .adv-header .section-heading { color: var(--cream); }
-  .adv-header .section-tag { justify-content: center; }
-  .adv-header .section-tag::before { display: none; }
-
-  .adv-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
-  }
-
-  .adv-card {
-    background: rgba(245,240,232,0.03);
-    padding: 50px 40px;
-    position: relative; overflow: hidden;
-    transition: background 0.4s;
-    cursor: default;
-    border: 1px solid rgba(201,168,76,0.08);
-  }
-  .adv-card:hover { background: rgba(245,240,232,0.06); }
-  .adv-card::before {
-    content: '';
-    position: absolute; bottom: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
-    opacity: 0; transition: opacity 0.4s;
-  }
-  .adv-card:hover::before { opacity: 1; }
-
-  .adv-icon {
-    font-size: 36px; margin-bottom: 24px;
-    display: block;
-    transform: scale(1);
-    transition: transform 0.3s;
-  }
-  .adv-card:hover .adv-icon { transform: scale(1.1); }
-
-  .adv-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 24px; font-weight: 400;
-    color: var(--cream); margin-bottom: 12px;
-  }
-  .adv-text {
-    font-size: 14px; line-height: 1.7;
-    color: rgba(245,240,232,0.45);
-  }
-  .adv-num {
-    position: absolute; top: 30px; right: 30px;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 60px; font-weight: 300;
-    color: rgba(201,168,76,0.06);
-    line-height: 1;
-  }
-
-  /* ============================
-     SERVICES
-  ============================ */
-  #services {
-    padding: 120px 0;
-    background: var(--warm);
-    position: relative;
-  }
-
-  .services-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
-    margin-top: 60px;
-  }
-
-  .service-card {
-    background: var(--cream);
-    padding: 50px 44px;
-    position: relative; overflow: hidden;
-    transition: transform 0.4s cubic-bezier(.22,1,.36,1), box-shadow 0.4s;
-    border-bottom: 3px solid transparent;
-  }
-  .service-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 30px 60px rgba(44,31,20,0.12);
-    border-bottom-color: var(--gold);
-  }
-  .service-card::after {
-    content: attr(data-num);
-    position: absolute; bottom: 20px; right: 30px;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 80px; font-weight: 300;
-    color: rgba(201,168,76,0.07);
-    line-height: 1;
-  }
-  .service-icon {
-    font-size: 32px; margin-bottom: 20px;
-    transition: transform 0.3s;
-  }
-  .service-card:hover .service-icon { transform: rotate(5deg) scale(1.1); }
-  .service-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 28px; font-weight: 400;
-    color: var(--espresso); margin-bottom: 12px;
-  }
-  .service-text { font-size: 14px; line-height: 1.75; color: var(--muted); }
-  .service-tag {
-    display: inline-block; margin-top: 20px;
-    padding: 4px 12px;
-    background: rgba(201,168,76,0.12);
-    color: var(--copper);
-    font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
-  }
-
-  /* ============================
-     MENU / ASSORTMENT
-  ============================ */
-  #menu {
-    padding: 120px 0;
-    background: var(--espresso);
-    position: relative; overflow: hidden;
-  }
-  #menu::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: 
-      radial-gradient(ellipse at top left, rgba(201,168,76,0.08), transparent 50%),
-      radial-gradient(ellipse at bottom right, rgba(181,101,29,0.06), transparent 50%);
-  }
-
-  .menu-header { text-align: center; margin-bottom: 70px; position: relative; z-index: 1; }
-  .menu-header .section-heading { color: var(--cream); }
-  .menu-header .section-tag { justify-content: center; }
-  .menu-header .section-tag::before { display: none; }
-
-  .menu-tabs {
-    display: flex; justify-content: center; gap: 0;
-    margin-bottom: 50px; position: relative; z-index: 1;
-    flex-wrap: wrap;
-  }
-  .menu-tab {
-    padding: 12px 28px;
-    background: none; border: 1px solid rgba(201,168,76,0.2);
-    color: rgba(245,240,232,0.4);
-    font-family: 'DM Sans', sans-serif; font-size: 12px;
-    letter-spacing: 0.15em; text-transform: uppercase;
-    cursor: pointer; transition: all 0.3s;
-    margin: -1px;
-  }
-  .menu-tab.active, .menu-tab:hover {
-    background: var(--gold); color: var(--espresso);
-    border-color: var(--gold);
-  }
-
-  .menu-panel { display: none; }
-  .menu-panel.active { display: block; animation: fadeInUp 0.5s ease; }
-
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .menu-items {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1px;
-    background: rgba(201,168,76,0.1);
-    position: relative; z-index: 1;
-  }
-
-  .menu-item {
-    background: rgba(26,21,16,0.8);
-    padding: 28px 36px;
-    display: flex; justify-content: space-between; align-items: flex-start;
-    transition: background 0.3s;
-    gap: 20px;
-  }
-  .menu-item:hover { background: rgba(44,31,20,0.9); }
-  .menu-item-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 20px; font-weight: 400;
-    color: var(--cream); margin-bottom: 4px;
-  }
-  .menu-item-desc { font-size: 13px; color: rgba(245,240,232,0.35); }
-  .menu-item-price {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 22px; font-weight: 300;
-    color: var(--gold); white-space: nowrap;
-  }
-
-  /* ============================
-     GALLERY STRIP
-  ============================ */
-  .gallery-strip {
-    height: 200px;
-    display: flex; overflow: hidden;
-  }
-  .gallery-strip-item {
-    flex: 1; min-width: 0;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 48px;
-    transition: flex 0.6s cubic-bezier(.22,1,.36,1);
-    position: relative; overflow: hidden;
-  }
-  .gallery-strip-item:nth-child(1) { background: linear-gradient(135deg, #3d2b1a, #5c3d22); }
-  .gallery-strip-item:nth-child(2) { background: linear-gradient(135deg, #4a3528, #6b4c35); }
-  .gallery-strip-item:nth-child(3) { background: linear-gradient(135deg, #352618, #4f3821); }
-  .gallery-strip-item:nth-child(4) { background: linear-gradient(135deg, #3b2a19, #5a3e24); }
-  .gallery-strip-item:nth-child(5) { background: linear-gradient(135deg, #2e2010, #453016); }
-  .gallery-strip-item:hover { flex: 3; }
-
-  /* ============================
-     CONTACT / MAP
-  ============================ */
-  #contact {
-    padding: 100px 0 0;
-    background: var(--cream);
-  }
-  .contact-grid {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 80px; align-items: start;
-    margin-bottom: 80px;
-  }
-  .contact-info { }
-  .contact-detail {
-    display: flex; align-items: flex-start; gap: 16px;
-    margin-bottom: 32px; padding-bottom: 32px;
-    border-bottom: 1px solid rgba(201,168,76,0.15);
-  }
-  .contact-detail:last-child { border-bottom: none; }
-  .contact-icon { font-size: 20px; padding-top: 2px; }
-  .contact-label {
-    font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase;
-    color: var(--gold); margin-bottom: 4px;
-  }
-  .contact-value {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 20px; color: var(--espresso);
-  }
-
-  .hours-grid {
-    display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
-    margin-top: 40px;
-  }
-  .hours-item {
-    padding: 20px;
-    background: var(--warm);
-    border-left: 2px solid var(--gold);
-  }
-  .hours-day {
-    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
-    color: var(--muted); margin-bottom: 4px;
-  }
-  .hours-time {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 22px; color: var(--espresso);
-  }
-
-  .map-section {
-    height: 500px; position: relative;
-    border-top: 4px solid var(--gold);
-  }
-  .map-section iframe {
-    width: 100%; height: 100%; border: none;
-  }
-  .map-overlay {
-    position: absolute; top: 24px; left: 24px; z-index: 10;
-    background: var(--espresso);
-    padding: 20px 28px;
-    pointer-events: none;
-  }
-  .map-overlay-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 20px; color: var(--cream);
-  }
-  .map-overlay-addr {
-    font-size: 12px; color: var(--gold); margin-top: 4px;
-    letter-spacing: 0.05em;
-  }
-
-  /* ============================
-     FOOTER
-  ============================ */
-  footer {
-    background: var(--espresso);
-    padding: 60px 0 30px;
-  }
-  .footer-inner {
-    display: flex; justify-content: space-between; align-items: center;
-    flex-wrap: wrap; gap: 24px; margin-bottom: 40px;
-  }
-  .footer-brand {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 32px; color: var(--cream);
-    letter-spacing: 0.05em;
-  }
-  .footer-brand span { color: var(--gold); }
-  .footer-links {
-    display: flex; gap: 32px;
-  }
-  .footer-links a {
-    font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase;
-    color: rgba(245,240,232,0.4); text-decoration: none;
-    transition: color 0.2s;
-  }
-  .footer-links a:hover { color: var(--gold); }
-  .footer-copy {
-    text-align: center; padding-top: 30px;
-    border-top: 1px solid rgba(245,240,232,0.08);
-    font-size: 12px; color: rgba(245,240,232,0.2);
-    letter-spacing: 0.1em;
-  }
-
-  /* ============================
-     SCROLL ANIMATIONS
-  ============================ */
-  .reveal {
-    opacity: 0; transform: translateY(40px);
-    transition: opacity 0.8s cubic-bezier(.22,1,.36,1), transform 0.8s cubic-bezier(.22,1,.36,1);
-  }
-  .reveal.revealed { opacity: 1; transform: translateY(0); }
-  .reveal-left {
-    opacity: 0; transform: translateX(-40px);
-    transition: opacity 0.8s cubic-bezier(.22,1,.36,1), transform 0.8s cubic-bezier(.22,1,.36,1);
-  }
-  .reveal-left.revealed { opacity: 1; transform: translateX(0); }
-  .reveal-right {
-    opacity: 0; transform: translateX(40px);
-    transition: opacity 0.8s cubic-bezier(.22,1,.36,1), transform 0.8s cubic-bezier(.22,1,.36,1);
-  }
-  .reveal-right.revealed { opacity: 1; transform: translateX(0); }
-  .reveal-delay-1 { transition-delay: 0.1s; }
-  .reveal-delay-2 { transition-delay: 0.2s; }
-  .reveal-delay-3 { transition-delay: 0.3s; }
-  .reveal-delay-4 { transition-delay: 0.4s; }
-  .reveal-delay-5 { transition-delay: 0.5s; }
-
-  /* ============================
-     RESPONSIVE
-  ============================ */
-  @media (max-width: 1024px) {
-    .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 50px; }
-    .adv-grid { grid-template-columns: repeat(2, 1fr); }
-    .services-grid { grid-template-columns: 1fr; }
-    .menu-items { grid-template-columns: 1fr; }
-  }
-  @media (max-width: 768px) {
-    .container, .container-wide { padding: 0 24px; }
-    #about, #advantages, #services, #menu, #contact { padding: 80px 0; }
-    .adv-grid { grid-template-columns: 1fr; }
-    .stat-grid { grid-template-columns: 1fr 1fr; }
-    .lang-bar { padding: 12px 20px; }
-    .gallery-strip { height: 140px; }
-    .map-section { height: 400px; }
-    .hours-grid { grid-template-columns: 1fr; }
-    body { cursor: auto; }
-    .cursor, .cursor-follower { display: none; }
-    .footer-inner { flex-direction: column; text-align: center; }
-    .footer-links { justify-content: center; flex-wrap: wrap; gap: 16px; }
-    .hero-scroll { display: none; }
-    #about::before { display: none; }
-    .menu-tabs { gap: 8px; }
-    .menu-tab { padding: 10px 18px; }
-  }
-  @media (max-width: 480px) {
-    .adv-card, .service-card { padding: 36px 28px; }
-    .about-card { padding: 40px 30px; }
-    .menu-item { padding: 20px 24px; flex-direction: column; }
-  }
-
-  /* LANG HIDDEN */
-  [data-lang] { display: none; }
-  [data-lang].lang-active { display: block; }
-  [data-lang-inline] { display: none; }
-  [data-lang-inline].lang-active { display: inline; }
+/* LANG CONTENT */
+[data-lang]{display:none}
+[data-lang].active{display:block}
+[data-lang-inline]{display:none}
+[data-lang-inline].active{display:inline}
 </style>
 </head>
 <body>
 
-<!-- CUSTOM CURSOR -->
-<div class="cursor" id="cursor"></div>
-<div class="cursor-follower" id="cursorFollower"></div>
+<div id="cur"></div>
+<div id="cur-r"></div>
 
 <!-- LOADER -->
 <div id="loader">
-  <div class="loader-logo">
-    <span>m</span><span>a</span><span>l</span><span>a</span><span class="loader-dot">.</span><span>k</span><span>e</span><span>r</span><span>k</span><span>a</span>
-  </div>
-  <div class="loader-line"></div>
-  <div class="loader-sub">Praha · Café & Bistro</div>
-  <div class="loader-progress"></div>
+  <div class="l-txt">MALA<span>.</span>KERKA</div>
+  <div class="l-dot"></div>
+  <div class="l-sub">Tattoo Studio · Praha · Est. 2019</div>
 </div>
 
-<!-- LANGUAGE BAR -->
-<nav class="lang-bar" id="langBar">
-  <a href="#hero" class="brand-nav">mala<span style="color:var(--gold)">.</span>kerka</a>
-  <button class="lang-btn active" onclick="setLang('cs')">CS</button>
-  <button class="lang-btn" onclick="setLang('en')">EN</button>
-  <button class="lang-btn" onclick="setLang('de')">DE</button>
-  <button class="lang-btn" onclick="setLang('ru')">RU</button>
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo">MALA<em>.</em>KERKA</a>
+  <ul class="nav-links">
+    <li><a href="#about" data-t="nav_about">O nás</a></li>
+    <li><a href="#services" data-t="nav_services">Služby</a></li>
+    <li><a href="#portfolio" data-t="nav_portfolio">Portfolio</a></li>
+    <li><a href="#team" data-t="nav_team">Tým</a></li>
+    <li><a href="#contact" data-t="nav_contact">Kontakt</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="lang">
+      <button class="lb active" onclick="setLang('cs')">CS</button>
+      <button class="lb" onclick="setLang('en')">EN</button>
+      <button class="lb" onclick="setLang('de')">DE</button>
+      <button class="lb" onclick="setLang('ru')">RU</button>
+    </div>
+    <div class="burger" id="burger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
 </nav>
 
-<!-- ============ HERO ============ -->
-<section id="hero">
-  <div class="hero-bg"></div>
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
-  <div class="hero-lines"></div>
-
-  <div class="hero-content" id="heroContent">
-    <div class="hero-eyebrow">
-      <span data-lang="cs" class="lang-active">Café & Bistro · Praha</span>
-      <span data-lang="en">Café & Bistro · Prague</span>
-      <span data-lang="de">Café & Bistro · Prag</span>
-      <span data-lang="ru">Кафе & Бистро · Прага</span>
-    </div>
-    <h1 class="hero-title">
-      mala<em>.kerka</em>
-    </h1>
-    <p class="hero-subtitle">
-      <span data-lang="cs" class="lang-active">Místo, kde čas plyne pomaleji</span>
-      <span data-lang="en">A place where time slows down</span>
-      <span data-lang="de">Ein Ort, wo die Zeit langsamer vergeht</span>
-      <span data-lang="ru">Место, где время течёт медленнее</span>
-    </p>
-    <a href="#about" class="hero-cta">
-      <span data-lang="cs" class="lang-active">Objevit více</span>
-      <span data-lang="en">Discover more</span>
-      <span data-lang="de">Mehr entdecken</span>
-      <span data-lang="ru">Узнать больше</span>
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </a>
+<!-- MOBILE NAV -->
+<div class="mnav" id="mnav">
+  <a href="#about" onclick="toggleMenu()" data-t="nav_about">O NÁS</a>
+  <a href="#services" onclick="toggleMenu()" data-t="nav_services">SLUŽBY</a>
+  <a href="#portfolio" onclick="toggleMenu()" data-t="nav_portfolio">PORTFOLIO</a>
+  <a href="#team" onclick="toggleMenu()" data-t="nav_team">TÝM</a>
+  <a href="#contact" onclick="toggleMenu()" data-t="nav_contact">KONTAKT</a>
+  <div class="mlang">
+    <button class="lb active" onclick="setLang('cs')">CS</button>
+    <button class="lb" onclick="setLang('en')">EN</button>
+    <button class="lb" onclick="setLang('de')">DE</button>
+    <button class="lb" onclick="setLang('ru')">RU</button>
   </div>
-
-  <div class="hero-scroll">
-    <span data-lang="cs" class="lang-active">Scroll</span>
-    <span data-lang="en">Scroll</span>
-    <span data-lang="de">Scroll</span>
-    <span data-lang="ru">Листать</span>
-  </div>
-</section>
-
-<!-- ============ ABOUT ============ -->
-<section id="about">
-  <div class="container">
-    <div class="about-grid">
-      <div class="reveal-left">
-        <div class="section-tag">
-          <span data-lang="cs" class="lang-active">O nás</span>
-          <span data-lang="en">About Us</span>
-          <span data-lang="de">Über uns</span>
-          <span data-lang="ru">О нас</span>
-        </div>
-        <h2 class="section-heading">
-          <span data-lang="cs" class="lang-active">Srdce <em>Prahy</em><br>ve šálku kávy</span>
-          <span data-lang="en">The heart of <em>Prague</em><br>in a cup</span>
-          <span data-lang="de">Das Herz <em>Prags</em><br>in einer Tasse</span>
-          <span data-lang="ru">Сердце <em>Праги</em><br>в чашке кофе</span>
-        </h2>
-        <p class="body-text">
-          <span data-lang="cs" class="lang-active">mala.kerka je útulná kavárna a bistro ukrytá v srdci Prahy. Nabízíme pečlivě připravenou specialty kávu, domácí dezerty a sezónní pokrmy z lokálních surovin.</span>
-          <span data-lang="en">mala.kerka is a cozy café and bistro hidden in the heart of Prague. We offer carefully prepared specialty coffee, homemade desserts, and seasonal dishes from local ingredients.</span>
-          <span data-lang="de">mala.kerka ist ein gemütliches Café und Bistro, versteckt im Herzen Prags. Wir bieten sorgfältig zubereiteten Specialty-Kaffee, hausgemachte Desserts und saisonale Gerichte aus lokalen Zutaten.</span>
-          <span data-lang="ru">mala.kerka — уютное кафе и бистро в самом сердце Праги. Мы предлагаем тщательно приготовленный specialty-кофе, домашние десерты и сезонные блюда из местных продуктов.</span>
-        </p>
-        <p class="body-text">
-          <span data-lang="cs" class="lang-active">Naším cílem je vytvořit místo, kde se budete vždy cítit jako doma. Ať přijdete na ranní kávu, pracovní oběd nebo odpolední posezení s přáteli.</span>
-          <span data-lang="en">Our goal is to create a place where you will always feel at home — whether you come for morning coffee, a working lunch, or afternoon time with friends.</span>
-          <span data-lang="de">Unser Ziel ist es, einen Ort zu schaffen, an dem Sie sich immer wie zu Hause fühlen — ob Sie zum Morgenkaffee, Arbeitsessen oder Nachmittagstreffs kommen.</span>
-          <span data-lang="ru">Наша цель — создать место, где вы всегда будете чувствовать себя как дома, будь то утренний кофе, рабочий обед или вечернее общение с друзьями.</span>
-        </p>
-      </div>
-      <div class="about-visual reveal-right">
-        <div class="about-card" style="position:relative;">
-          <div class="corner-bracket tl"></div>
-          <div class="corner-bracket br"></div>
-          <div class="stat-grid">
-            <div class="stat-item">
-              <div class="stat-number">07:30</div>
-              <div class="stat-label">
-                <span data-lang="cs" class="lang-active">Otevíráme</span>
-                <span data-lang="en">Opens at</span>
-                <span data-lang="de">Öffnung</span>
-                <span data-lang="ru">Открытие</span>
-              </div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-number">22:00</div>
-              <div class="stat-label">
-                <span data-lang="cs" class="lang-active">Zavíráme</span>
-                <span data-lang="en">Closes at</span>
-                <span data-lang="de">Schließung</span>
-                <span data-lang="ru">Закрытие</span>
-              </div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-number">7×</div>
-              <div class="stat-label">
-                <span data-lang="cs" class="lang-active">Otevřeno denně</span>
-                <span data-lang="en">Open daily</span>
-                <span data-lang="de">Täglich geöffnet</span>
-                <span data-lang="ru">Открыто ежедневно</span>
-              </div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-number">♥</div>
-              <div class="stat-label">
-                <span data-lang="cs" class="lang-active">S láskou Praha</span>
-                <span data-lang="en">Made with love</span>
-                <span data-lang="de">Mit Liebe gemacht</span>
-                <span data-lang="ru">С любовью в Праге</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="about-img-wrap" style="margin-top:20px; display:flex; align-items:center; justify-content:center; gap:20px; padding:40px;">
-          <span style="font-size:48px; opacity:0.5;">☕</span>
-          <span style="font-size:48px; opacity:0.5;">🥐</span>
-          <span style="font-size:48px; opacity:0.5;">🍰</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ GALLERY STRIP ============ -->
-<div class="gallery-strip">
-  <div class="gallery-strip-item"><span style="opacity:0.4; color:#c9a84c; font-size:36px;">☕</span></div>
-  <div class="gallery-strip-item"><span style="opacity:0.4; color:#c9a84c; font-size:36px;">🥐</span></div>
-  <div class="gallery-strip-item"><span style="opacity:0.4; color:#c9a84c; font-size:36px;">🍽️</span></div>
-  <div class="gallery-strip-item"><span style="opacity:0.4; color:#c9a84c; font-size:36px;">🍷</span></div>
-  <div class="gallery-strip-item"><span style="opacity:0.4; color:#c9a84c; font-size:36px;">🎂</span></div>
 </div>
 
-<!-- ============ ADVANTAGES ============ -->
-<section id="advantages">
-  <div class="container-wide" style="position:relative;z-index:1;">
-    <div class="adv-header reveal">
-      <div class="section-tag">
-        <span data-lang="cs" class="lang-active">Proč právě my</span>
-        <span data-lang="en">Why choose us</span>
-        <span data-lang="de">Warum wir</span>
-        <span data-lang="ru">Почему мы</span>
-      </div>
-      <h2 class="section-heading">
-        <span data-lang="cs" class="lang-active">Naše <em>přednosti</em></span>
-        <span data-lang="en">Our <em>advantages</em></span>
-        <span data-lang="de">Unsere <em>Vorzüge</em></span>
-        <span data-lang="ru">Наши <em>преимущества</em></span>
-      </h2>
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-lines"></div>
+  <div class="cross-hair"></div>
+  <div class="big-dot"></div>
+  <div class="hero-content">
+    <p class="hero-tag" data-t="hero_tag">Tattoo Studio · Praha 3 · Vinohrady</p>
+    <h1 class="hero-h1">MALA<span>.</span><br>KERKA</h1>
+    <h2 class="hero-h2" data-t="hero_sub">Umění na kůži,<br>které vydrží věčnost</h2>
+    <div class="hero-cta">
+      <a href="#contact" class="btn-r"><span data-t="hero_btn1">Rezervovat termín</span></a>
+      <a href="#portfolio" class="btn-o" data-t="hero_btn2">Prohlédnout práce</a>
     </div>
-    <div class="adv-grid">
-      <div class="adv-card reveal reveal-delay-1">
-        <span class="adv-num">01</span>
-        <span class="adv-icon">☕</span>
-        <div class="adv-title">
-          <span data-lang="cs" class="lang-active">Specialty Káva</span>
-          <span data-lang="en">Specialty Coffee</span>
-          <span data-lang="de">Specialty-Kaffee</span>
-          <span data-lang="ru">Specialty-кофе</span>
+  </div>
+  <div class="scroll-ind">
+    <span data-t="scroll">Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-grid">
+    <div class="reveal-l">
+      <span class="s-label" data-t="about_label">— O studiu</span>
+      <h2 class="s-title" data-t="about_title">NAŠE<br><em>STORY</em></h2>
+      <p class="s-text" data-t="about_text">Mala.kerka je intimní tattoo studio v srdci Prahy 3. Vzniklo z vášně pro precizní linky a osobní příběhy. Každé tetování tvoříme s absolutní péčí — od prvního návrhu až po finální výsledek na vaší kůži.</p>
+      <div class="about-num-row" style="margin-top:40px">
+        <div class="about-num reveal" style="transition-delay:.1s">
+          <strong>500+</strong>
+          <span data-t="stat1">Spokojených klientů</span>
         </div>
-        <div class="adv-text">
-          <span data-lang="cs" class="lang-active">Používáme pouze výběrová kávová zrna od lokálních pražíren. Každý šálek připravujeme s maximální péčí a precizností.</span>
-          <span data-lang="en">We use only selected coffee beans from local roasters. Every cup is prepared with maximum care and precision.</span>
-          <span data-lang="de">Wir verwenden nur ausgewählte Kaffeebohnen von lokalen Röstern. Jede Tasse wird mit größter Sorgfalt zubereitet.</span>
-          <span data-lang="ru">Используем только отборные зёрна от местных обжарщиков. Каждая чашка готовится с максимальной заботой и точностью.</span>
+        <div class="about-num reveal" style="transition-delay:.2s">
+          <strong>5+</strong>
+          <span data-t="stat2">Let zkušeností</span>
         </div>
-      </div>
-      <div class="adv-card reveal reveal-delay-2">
-        <span class="adv-num">02</span>
-        <span class="adv-icon">🥗</span>
-        <div class="adv-title">
-          <span data-lang="cs" class="lang-active">Čerstvé Suroviny</span>
-          <span data-lang="en">Fresh Ingredients</span>
-          <span data-lang="de">Frische Zutaten</span>
-          <span data-lang="ru">Свежие Продукты</span>
-        </div>
-        <div class="adv-text">
-          <span data-lang="cs" class="lang-active">Spolupracujeme s lokálními farmáři a dodavateli. Naše menu se mění se sezónou, aby vám přineslo to nejlepší z každého ročního období.</span>
-          <span data-lang="en">We work with local farmers and suppliers. Our menu changes with the seasons to bring you the best of each time of year.</span>
-          <span data-lang="de">Wir arbeiten mit lokalen Bauern und Lieferanten zusammen. Unser Menü wechselt mit den Jahreszeiten.</span>
-          <span data-lang="ru">Сотрудничаем с местными фермерами. Наше меню меняется с сезоном, принося вам лучшее круглый год.</span>
+        <div class="about-num reveal" style="transition-delay:.3s">
+          <strong>100%</strong>
+          <span data-t="stat3">Vegánské barvy</span>
         </div>
       </div>
-      <div class="adv-card reveal reveal-delay-3">
-        <span class="adv-num">03</span>
-        <span class="adv-icon">🏡</span>
-        <div class="adv-title">
-          <span data-lang="cs" class="lang-active">Útulná Atmosféra</span>
-          <span data-lang="en">Cozy Atmosphere</span>
-          <span data-lang="de">Gemütliche Atmosphäre</span>
-          <span data-lang="ru">Уютная Атмосфера</span>
+    </div>
+    <div class="about-visual reveal-r">
+      <div class="about-frame">
+        <div class="about-frame-inner">
+          <div class="frame-icon">M.K</div>
         </div>
-        <div class="adv-text">
-          <span data-lang="cs" class="lang-active">Interiér navrhl místní designér, který spojil historii Prahy s moderní estetikou. Cítíte se u nás jako doma.</span>
-          <span data-lang="en">Interior designed by a local designer combining Prague's history with modern aesthetics. You'll feel right at home.</span>
-          <span data-lang="de">Interior von einem lokalen Designer gestaltet, der Prags Geschichte mit moderner Ästhetik verbindet.</span>
-          <span data-lang="ru">Интерьер от местного дизайнера, объединяющий историю Праги с современной эстетикой. Здесь вы почувствуете себя дома.</span>
-        </div>
+        <div class="about-corner tl"></div>
+        <div class="about-corner br"></div>
       </div>
-      <div class="adv-card reveal reveal-delay-4">
-        <span class="adv-num">04</span>
-        <span class="adv-icon">🌍</span>
-        <div class="adv-title">
-          <span data-lang="cs" class="lang-active">4 Jazyky</span>
-          <span data-lang="en">4 Languages</span>
-          <span data-lang="de">4 Sprachen</span>
-          <span data-lang="ru">4 Языка</span>
-        </div>
-        <div class="adv-text">
-          <span data-lang="cs" class="lang-active">Vítáme hosty ze všech koutů světa. Náš personál mluví česky, anglicky, německy a rusky.</span>
-          <span data-lang="en">We welcome guests from all corners of the world. Our staff speaks Czech, English, German, and Russian.</span>
-          <span data-lang="de">Wir begrüßen Gäste aus aller Welt. Unser Personal spricht Tschechisch, Englisch, Deutsch und Russisch.</span>
-          <span data-lang="ru">Принимаем гостей со всего мира. Наш персонал говорит на чешском, английском, немецком и русском языках.</span>
-        </div>
-      </div>
-      <div class="adv-card reveal reveal-delay-5">
-        <span class="adv-num">05</span>
-        <span class="adv-icon">📍</span>
-        <div class="adv-title">
-          <span data-lang="cs" class="lang-active">Skvělá Poloha</span>
-          <span data-lang="en">Great Location</span>
-          <span data-lang="de">Tolle Lage</span>
-          <span data-lang="ru">Отличное Расположение</span>
-        </div>
-        <div class="adv-text">
-          <span data-lang="cs" class="lang-active">Nacházíme se v samém srdci Prahy, snadno dostupní MHD i pěšky. Ideální zastávka při procházce historickým centrem.</span>
-          <span data-lang="en">Located in the very heart of Prague, easily accessible by public transport and on foot. Ideal stop during a stroll through the historic center.</span>
-          <span data-lang="de">Im Herzen Prags gelegen, leicht mit öffentlichen Verkehrsmitteln und zu Fuß erreichbar.</span>
-          <span data-lang="ru">Находимся в самом центре Праги, легко доступны на общественном транспорте и пешком.</span>
-        </div>
-      </div>
-      <div class="adv-card reveal reveal-delay-5">
-        <span class="adv-num">06</span>
-        <span class="adv-icon">💻</span>
-        <div class="adv-title">
-          <span data-lang="cs" class="lang-active">WiFi & Workspace</span>
-          <span data-lang="en">WiFi & Workspace</span>
-          <span data-lang="de">WiFi & Arbeitsplatz</span>
-          <span data-lang="ru">WiFi & Рабочее место</span>
-        </div>
-        <div class="adv-text">
-          <span data-lang="cs" class="lang-active">Rychlé WiFi připojení, dobíjecí stanice a klidné prostředí pro práci nebo studium. Ideální pro digitální nomády.</span>
-          <span data-lang="en">Fast WiFi, charging stations, and a quiet environment for work or study. Ideal for digital nomads.</span>
-          <span data-lang="de">Schnelles WiFi, Ladestationen und ruhige Umgebung für Arbeit oder Studium. Ideal für digitale Nomaden.</span>
-          <span data-lang="ru">Быстрый WiFi, зарядные станции и тихая обстановка для работы или учёбы. Идеально для цифровых кочевников.</span>
-        </div>
+      <div class="about-badge">
+        <strong>★ 4.9</strong>
+        <span>Google<br>Review</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============ SERVICES ============ -->
+<!-- WHY -->
+<section id="why">
+  <div style="max-width:1200px;margin:0 auto">
+    <span class="s-label reveal" data-t="why_label">— Proč my</span>
+    <h2 class="s-title reveal" data-t="why_title">NAŠE<br>VÝHODY <em>.</em></h2>
+  </div>
+  <div class="why-grid reveal">
+    <div class="why-card">
+      <div class="why-num">01</div>
+      <div class="why-title" data-t="why1_t">Bezpečnost na prvním místě</div>
+      <div class="why-text" data-t="why1_d">Sterilní podmínky, certifikované vegánské inkousty schválené EU. Každá jehla je nová, každý povrch dezinfikovaný.</div>
+    </div>
+    <div class="why-card">
+      <div class="why-num">02</div>
+      <div class="why-title" data-t="why2_t">Individuální přístup</div>
+      <div class="why-text" data-t="why2_d">Žádné copy-paste vzory. Každý motiv tvoříme na míru vaší osobnosti, příběhu a části těla.</div>
+    </div>
+    <div class="why-card">
+      <div class="why-num">03</div>
+      <div class="why-title" data-t="why3_t">Zkušení umělci</div>
+      <div class="why-text" data-t="why3_d">Náš tým má dohromady přes 15 let praxe. Zvládáme fine line, realism, blackwork i ornamentální styly.</div>
+    </div>
+    <div class="why-card">
+      <div class="why-num">04</div>
+      <div class="why-title" data-t="why4_t">Péče po tetování</div>
+      <div class="why-text" data-t="why4_d">Podrobný aftercare manuál, follow-up po 2 týdnech a bezplatné opravy do 3 měsíců.</div>
+    </div>
+    <div class="why-card">
+      <div class="why-num">05</div>
+      <div class="why-title" data-t="why5_t">Útulná atmosféra</div>
+      <div class="why-text" data-t="why5_d">Žádný industriální chladný salon. Přijdete k nám jako k přátelům — káva, hudba, klid.</div>
+    </div>
+    <div class="why-card">
+      <div class="why-num">06</div>
+      <div class="why-title" data-t="why6_t">Férové ceny</div>
+      <div class="why-text" data-t="why6_d">Transparentní ceník bez skrytých poplatků. Konzultace a návrh zdarma.</div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
 <section id="services">
-  <div class="container">
-    <div class="reveal">
-      <div class="section-tag">
-        <span data-lang="cs" class="lang-active">Co nabízíme</span>
-        <span data-lang="en">What we offer</span>
-        <span data-lang="de">Was wir anbieten</span>
-        <span data-lang="ru">Что мы предлагаем</span>
-      </div>
-      <h2 class="section-heading">
-        <span data-lang="cs" class="lang-active">Naše <em>služby</em></span>
-        <span data-lang="en">Our <em>services</em></span>
-        <span data-lang="de">Unsere <em>Leistungen</em></span>
-        <span data-lang="ru">Наши <em>услуги</em></span>
-      </h2>
+  <div class="services-header">
+    <div>
+      <span class="s-label reveal" data-t="srv_label">— Naše služby</span>
+      <h2 class="s-title reveal" data-t="srv_title">CO<br>NABÍZÍME <em>.</em></h2>
     </div>
-    <div class="services-grid">
-      <div class="service-card reveal reveal-delay-1" data-num="01">
-        <div class="service-icon">☕</div>
-        <div class="service-title">
-          <span data-lang="cs" class="lang-active">Kavárna</span>
-          <span data-lang="en">Café</span>
-          <span data-lang="de">Kaffeebar</span>
-          <span data-lang="ru">Кофейня</span>
-        </div>
-        <div class="service-text">
-          <span data-lang="cs" class="lang-active">Espresso, flat white, chemex, V60, cold brew a mnoho dalšího. Náš barista vám připraví dokonalý šálek přesně podle vašich představ. Pracujeme s pražírnou Doubleshot a dalšími lokálními dodavateli.</span>
-          <span data-lang="en">Espresso, flat white, chemex, V60, cold brew and much more. Our barista will prepare the perfect cup exactly to your taste. We work with Doubleshot roastery and other local suppliers.</span>
-          <span data-lang="de">Espresso, Flat White, Chemex, V60, Cold Brew und vieles mehr. Unser Barista bereitet die perfekte Tasse genau nach Ihren Wünschen zu.</span>
-          <span data-lang="ru">Эспрессо, флэт уайт, кемекс, V60, колд брю и многое другое. Наш бариста приготовит идеальную чашку именно по вашему вкусу.</span>
-        </div>
-        <div class="service-tag">
-          <span data-lang="cs" class="lang-active">Specialty Coffee</span>
-          <span data-lang="en">Specialty Coffee</span>
-          <span data-lang="de">Specialty Coffee</span>
-          <span data-lang="ru">Specialty Coffee</span>
+    <a href="#contact" class="btn-o reveal" data-t="srv_cta">Konzultace zdarma</a>
+  </div>
+  <div class="services-grid">
+    <div class="service-card reveal" style="transition-delay:.05s">
+      <div class="service-arrow">→</div>
+      <span class="service-icon">✦</span>
+      <div class="service-name" data-t="s1_name">Fine Line</div>
+      <div class="service-desc" data-t="s1_desc">Jemné, precizní linky. Minimalistické kompozice, botanické motivy, geometrie, nápisy. Specialita studia.</div>
+      <div class="service-price" data-t="s1_price">od 1 200 Kč / hod</div>
+    </div>
+    <div class="service-card reveal" style="transition-delay:.1s">
+      <div class="service-arrow">→</div>
+      <span class="service-icon">◈</span>
+      <div class="service-name" data-t="s2_name">Blackwork &amp; Linework</div>
+      <div class="service-desc" data-t="s2_desc">Silné černé linie, plná výplň, ornamentální vzory. Výrazný, nadčasový styl.</div>
+      <div class="service-price" data-t="s2_price">od 1 500 Kč / hod</div>
+    </div>
+    <div class="service-card reveal" style="transition-delay:.15s">
+      <div class="service-arrow">→</div>
+      <span class="service-icon">◉</span>
+      <div class="service-name" data-t="s3_name">Realism</div>
+      <div class="service-desc" data-t="s3_desc">Fotografický realismus — portréty, příroda, detailní figurální motivy. Černobílý i barevný.</div>
+      <div class="service-price" data-t="s3_price">od 2 000 Kč / hod</div>
+    </div>
+    <div class="service-card reveal" style="transition-delay:.2s">
+      <div class="service-arrow">→</div>
+      <span class="service-icon">⬡</span>
+      <div class="service-name" data-t="s4_name">Cover-up &amp; Rework</div>
+      <div class="service-desc" data-t="s4_desc">Předělání starého tetování. Přeměníme lítost v umělecké dílo. Konzultace vždy zdarma.</div>
+      <div class="service-price" data-t="s4_price">od 1 800 Kč / hod</div>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section id="portfolio">
+  <div style="max-width:1200px;margin:0 auto">
+    <span class="s-label reveal" data-t="port_label">— Portfolio</span>
+    <h2 class="s-title reveal" data-t="port_title">NAŠE<br><em>PRÁCE</em></h2>
+  </div>
+  <div class="port-grid reveal">
+    <div class="port-item">
+      <div class="port-bg pb1"><div class="port-ph">FINE<br>LINE</div></div>
+      <div class="port-overlay"><div><div class="port-label" data-t="p1_l">Botanika</div><div class="port-sub" data-t="p1_s">Fine Line · 2024</div></div></div>
+    </div>
+    <div class="port-item">
+      <div class="port-bg pb2"><div class="port-ph">BLACK<br>WORK</div></div>
+      <div class="port-overlay"><div><div class="port-label" data-t="p2_l">Geometrie</div><div class="port-sub" data-t="p2_s">Blackwork · 2024</div></div></div>
+    </div>
+    <div class="port-item">
+      <div class="port-bg pb3"><div class="port-ph">LINE<br>WORK</div></div>
+      <div class="port-overlay"><div><div class="port-label" data-t="p3_l">Ornament</div><div class="port-sub" data-t="p3_s">Linework · 2023</div></div></div>
+    </div>
+    <div class="port-item">
+      <div class="port-bg pb4"><div class="port-ph">REAL<br>ISM</div></div>
+      <div class="port-overlay"><div><div class="port-label" data-t="p4_l">Portrét</div><div class="port-sub" data-t="p4_s">Realism · 2024</div></div></div>
+    </div>
+    <div class="port-item">
+      <div class="port-bg pb5"><div class="port-ph">MINI<br>MAL</div></div>
+      <div class="port-overlay"><div><div class="port-label" data-t="p5_l">Minimál</div><div class="port-sub" data-t="p5_s">Fine Line · 2025</div></div></div>
+    </div>
+    <div class="port-item">
+      <div class="port-bg pb6"><div class="port-ph">DARK<br>ART</div></div>
+      <div class="port-overlay"><div><div class="port-label" data-t="p6_l">Dark Art</div><div class="port-sub" data-t="p6_s">Blackwork · 2025</div></div></div>
+    </div>
+    <div class="port-item">
+      <div class="port-bg pb7"><div class="port-ph">COVER<br>UP</div></div>
+      <div class="port-overlay"><div><div class="port-label" data-t="p7_l">Cover-up</div><div class="port-sub" data-t="p7_s">Rework · 2024</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section id="team">
+  <div style="max-width:1200px;margin:0 auto">
+    <span class="s-label reveal" data-t="team_label">— Náš tým</span>
+    <h2 class="s-title reveal" data-t="team_title">TATÉŘI<br><em>STUDIA</em></h2>
+  </div>
+  <div class="team-grid">
+    <div class="team-card reveal" style="transition-delay:.05s">
+      <div class="team-photo">
+        <div class="team-photo-bg pb1"></div>
+        <div class="team-ph">MK</div>
+      </div>
+      <div class="team-info">
+        <div class="team-name">Markéta K.</div>
+        <div class="team-role" data-t="tm1_role">Head Artist · Zakladatelka</div>
+        <div class="team-bio" data-t="tm1_bio">Specialistka na fine line a botanické motivy. 8 let praxe, absolvovala workshopy v Berlíně a Amsterdamu.</div>
+        <div class="team-tags">
+          <span class="tag">Fine Line</span>
+          <span class="tag">Botanical</span>
+          <span class="tag">Geometric</span>
         </div>
       </div>
-      <div class="service-card reveal reveal-delay-2" data-num="02">
-        <div class="service-icon">🥗</div>
-        <div class="service-title">
-          <span data-lang="cs" class="lang-active">Bistro & Kuchyně</span>
-          <span data-lang="en">Bistro & Kitchen</span>
-          <span data-lang="de">Bistro & Küche</span>
-          <span data-lang="ru">Бистро & Кухня</span>
-        </div>
-        <div class="service-text">
-          <span data-lang="cs" class="lang-active">Snídaně od 7:30, polední menu a celý den lehká jídla. Avocado toast, domácí polévky, saláty, sendviče a sezónní speciality. Vegetariánské a veganské možnosti vždy k dispozici.</span>
-          <span data-lang="en">Breakfast from 7:30, lunch menu, and light meals all day. Avocado toast, homemade soups, salads, sandwiches, and seasonal specialties. Vegetarian and vegan options always available.</span>
-          <span data-lang="de">Frühstück ab 7:30, Mittagsmenü und leichte Gerichte den ganzen Tag. Avocado-Toast, hausgemachte Suppen, Salate, Sandwiches und Saisonspeisen.</span>
-          <span data-lang="ru">Завтраки с 7:30, обеденное меню и лёгкие блюда весь день. Авокадо-тост, домашние супы, салаты, сэндвичи и сезонные специалитеты.</span>
-        </div>
-        <div class="service-tag">
-          <span data-lang="cs" class="lang-active">Denně čerstvé</span>
-          <span data-lang="en">Daily fresh</span>
-          <span data-lang="de">Täglich frisch</span>
-          <span data-lang="ru">Ежедневно свежее</span>
+    </div>
+    <div class="team-card reveal" style="transition-delay:.12s">
+      <div class="team-photo">
+        <div class="team-photo-bg pb2"></div>
+        <div class="team-ph">TN</div>
+      </div>
+      <div class="team-info">
+        <div class="team-name">Tomáš N.</div>
+        <div class="team-role" data-t="tm2_role">Senior Artist</div>
+        <div class="team-bio" data-t="tm2_bio">Mistr blackwork a realismu. Každý motiv přenáší do kůže s fotografickou přesností.</div>
+        <div class="team-tags">
+          <span class="tag">Blackwork</span>
+          <span class="tag">Realism</span>
+          <span class="tag">Cover-up</span>
         </div>
       </div>
-      <div class="service-card reveal reveal-delay-3" data-num="03">
-        <div class="service-icon">🎂</div>
-        <div class="service-title">
-          <span data-lang="cs" class="lang-active">Dezerty & Pečivo</span>
-          <span data-lang="en">Desserts & Pastries</span>
-          <span data-lang="de">Desserts & Gebäck</span>
-          <span data-lang="ru">Десерты & Выпечка</span>
-        </div>
-        <div class="service-text">
-          <span data-lang="cs" class="lang-active">Domácí dorty, croissanty, medovník, cheesecaky a sezónní sladkosti. Vše připravujeme každý den od rána v naší vlastní kuchyni. Ideální dárek nebo pochoutka k odpolednímu kafe.</span>
-          <span data-lang="en">Homemade cakes, croissants, honey cake, cheesecakes, and seasonal sweets. Everything freshly prepared every morning in our own kitchen. Perfect gift or treat with afternoon coffee.</span>
-          <span data-lang="de">Hausgemachte Kuchen, Croissants, Honigkuchen, Cheesecakes und Saisonsüßigkeiten. Täglich frisch in unserer eigenen Küche zubereitet.</span>
-          <span data-lang="ru">Домашние торты, круассаны, медовик, чизкейки и сезонные сладости. Всё готовится каждое утро на нашей собственной кухне.</span>
-        </div>
-        <div class="service-tag">
-          <span data-lang="cs" class="lang-active">Domácí výroba</span>
-          <span data-lang="en">Homemade</span>
-          <span data-lang="de">Hausgemacht</span>
-          <span data-lang="ru">Домашнее производство</span>
-        </div>
+    </div>
+    <div class="team-card reveal" style="transition-delay:.2s">
+      <div class="team-photo">
+        <div class="team-photo-bg pb6"></div>
+        <div class="team-ph">LV</div>
       </div>
-      <div class="service-card reveal reveal-delay-4" data-num="04">
-        <div class="service-icon">🥂</div>
-        <div class="service-title">
-          <span data-lang="cs" class="lang-active">Nápoje & Bar</span>
-          <span data-lang="en">Drinks & Bar</span>
-          <span data-lang="de">Getränke & Bar</span>
-          <span data-lang="ru">Напитки & Бар</span>
-        </div>
-        <div class="service-text">
-          <span data-lang="cs" class="lang-active">Výběr přírodních vín z českých a světových vinařství, čepované pivo, craft pivo, čaje a limonády. Odpoledne i večer se proměníme ve vinárnu se skvělou náladou.</span>
-          <span data-lang="en">Selection of natural wines from Czech and international wineries, draft and craft beer, teas, and lemonades. Afternoons and evenings we transform into a wine bar with great atmosphere.</span>
-          <span data-lang="de">Auswahl natürlicher Weine aus tschechischen und internationalen Weingütern, Bier vom Fass, Craft-Bier, Tees und Limonaden.</span>
-          <span data-lang="ru">Подборка натуральных вин от чешских и мировых виноделен, разливное и крафтовое пиво, чаи и лимонады. После обеда превращаемся в уютный винный бар.</span>
-        </div>
-        <div class="service-tag">
-          <span data-lang="cs" class="lang-active">Přírodní vína</span>
-          <span data-lang="en">Natural wines</span>
-          <span data-lang="de">Naturweine</span>
-          <span data-lang="ru">Натуральные вина</span>
+      <div class="team-info">
+        <div class="team-name">Lucie V.</div>
+        <div class="team-role" data-t="tm3_role">Tattoo Artist</div>
+        <div class="team-bio" data-t="tm3_bio">Nová hvězda studia. Vášnivá pro ornamentální styly a abstraktní linework. Každý kus je jedinečný.</div>
+        <div class="team-tags">
+          <span class="tag">Ornamental</span>
+          <span class="tag">Abstract</span>
+          <span class="tag">Linework</span>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============ MENU ============ -->
-<section id="menu">
-  <div class="container">
-    <div class="menu-header reveal">
-      <div class="section-tag">
-        <span data-lang="cs" class="lang-active">Jídelní & Nápojový lístek</span>
-        <span data-lang="en">Food & Drink Menu</span>
-        <span data-lang="de">Speise- & Getränkekarte</span>
-        <span data-lang="ru">Меню</span>
-      </div>
-      <h2 class="section-heading">
-        <span data-lang="cs" class="lang-active">Náš <em>sortiment</em></span>
-        <span data-lang="en">Our <em>assortment</em></span>
-        <span data-lang="de">Unser <em>Sortiment</em></span>
-        <span data-lang="ru">Наш <em>ассортимент</em></span>
-      </h2>
-    </div>
-
-    <div class="menu-tabs reveal">
-      <button class="menu-tab active" onclick="switchTab('coffee', this)">
-        <span data-lang="cs" class="lang-active">Káva</span>
-        <span data-lang="en">Coffee</span>
-        <span data-lang="de">Kaffee</span>
-        <span data-lang="ru">Кофе</span>
-      </button>
-      <button class="menu-tab" onclick="switchTab('food', this)">
-        <span data-lang="cs" class="lang-active">Jídlo</span>
-        <span data-lang="en">Food</span>
-        <span data-lang="de">Essen</span>
-        <span data-lang="ru">Еда</span>
-      </button>
-      <button class="menu-tab" onclick="switchTab('desserts', this)">
-        <span data-lang="cs" class="lang-active">Dezerty</span>
-        <span data-lang="en">Desserts</span>
-        <span data-lang="de">Desserts</span>
-        <span data-lang="ru">Десерты</span>
-      </button>
-      <button class="menu-tab" onclick="switchTab('drinks', this)">
-        <span data-lang="cs" class="lang-active">Nápoje</span>
-        <span data-lang="en">Drinks</span>
-        <span data-lang="de">Getränke</span>
-        <span data-lang="ru">Напитки</span>
-      </button>
-    </div>
-
-    <!-- COFFEE TAB -->
-    <div class="menu-panel active" id="tab-coffee">
-      <div class="menu-items">
-        <div class="menu-item">
-          <div>
-            <div class="menu-item-name">Espresso</div>
-            <div class="menu-item-desc">
-              <span data-lang="cs" class="lang-active">Jednoduchý, intenzivní</span>
-              <span data-lang="en">Single, intense</span>
-              <span data-lang="de">Einfach, intensiv</span>
-              <span data-lang="ru">Одиночный, насыщенный</span>
-            </div>
-          </div>
-          <div class="menu-item-price">55 Kč</div>
+<!-- PROCESS -->
+<section id="process" style="background:var(--bg2)">
+  <div style="max-width:1200px;margin:0 auto">
+    <span class="s-label reveal" data-t="proc_label">— Jak to funguje</span>
+    <h2 class="s-title reveal" data-t="proc_title">PROCES<br><em>TETOVÁNÍ</em></h2>
+    <div class="process-line">
+      <div class="process-steps">
+        <div class="process-step reveal" style="transition-delay:.05s">
+          <div class="process-dot"></div>
+          <div class="process-n">01</div>
+          <div class="process-t" data-t="pr1_t">Konzultace</div>
+          <div class="process-d" data-t="pr1_d">Osobně nebo online. Probíráme motiv, styl, umístění a velikost. Vždy zdarma.</div>
         </div>
-        <div class="menu-item">
-          <div>
-            <div class="menu-item-name">Flat White</div>
-            <div class="menu-item-desc">
-              <span data-lang="cs" class="lang-active">Dvojitý espresso s mikropěnou</span>
-              <span data-lang="en">Double espresso with microfoam</span>
-              <span data-lang="de">Doppelter Espresso mit Mikroschaum</span>
-              <span data-lang="ru">Двойной эспрессо с микропеной</span>
-            </div>
-          </div>
-          <div class="menu-item-price">85 Kč</div>
+        <div class="process-step reveal" style="transition-delay:.12s">
+          <div class="process-dot"></div>
+          <div class="process-n">02</div>
+          <div class="process-t" data-t="pr2_t">Návrh</div>
+          <div class="process-d" data-t="pr2_d">Připravíme jedinečný design na míru. Revize jsou součástí ceny — dokud nebudete spokojeni.</div>
         </div>
-        <div class="menu-item">
-          <div>
-            <div class="menu-item-name">Cappuccino</div>
-            <div class="menu-item-desc">
-              <span data-lang="cs" class="lang-active">Klasická italská příprava</span>
-              <span data-lang="en">Classic Italian preparation</span>
-              <span data-lang="de">Klassische italienische Zubereitung</span>
-              <span data-lang="ru">Классическое итальянское приготовление</span>
-            </div>
-          </div>
-          <div class="menu-item-price">80 Kč</div>
+        <div class="process-step reveal" style="transition-delay:.2s">
+          <div class="process-dot"></div>
+          <div class="process-n">03</div>
+          <div class="process-t" data-t="pr3_t">Tetování</div>
+          <div class="process-d" data-t="pr3_d">Den D. Sterilní prostředí, pohodlné křeslo, dobrá hudba. Postaráme se o váš komfort.</div>
         </div>
-        <div class="menu-item">
-          <div>
-            <div class="menu-item-name">V60 Pour Over</div>
-            <div class="menu-item-desc">
-              <span data-lang="cs" class="lang-active">Filtrovaná káva, single origin</span>
-              <span data-lang="en">Filter coffee, single origin</span>
-              <span data-lang="de">Filterkaffee, Single Origin</span>
-              <span data-lang="ru">Фильтр-кофе, single origin</span>
-            </div>
-          </div>
-          <div class="menu-item-price">95 Kč</div>
-        </div>
-        <div class="menu-item">
-          <div>
-            <div class="menu-item-name">Cold Brew</div>
-            <div class="menu-item-desc">
-              <span data-lang="cs" class="lang-active">Studený výluh, 18 hodin</span>
-              <span data-lang="en">Cold extraction, 18 hours</span>
-              <span data-lang="de">Kalter Aufguss, 18 Stunden</span>
-              <span data-lang="ru">Холодное заваривание, 18 часов</span>
-            </div>
-          </div>
-          <div class="menu-item-price">90 Kč</div>
-        </div>
-        <div class="menu-item">
-          <div>
-            <div class="menu-item-name">Matcha Latte</div>
-            <div class="menu-item-desc">
-              <span data-lang="cs" class="lang-active">Ceremonial grade matcha</span>
-              <span data-lang="en">Ceremonial grade matcha</span>
-              <span data-lang="de">Ceremonial Grade Matcha</span>
-              <span data-lang="ru">Ceremonial grade матча</span>
-            </div>
-          </div>
-          <div class="menu-item-price">95 Kč</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- FOOD TAB -->
-    <div class="menu-panel" id="tab-food">
-      <div class="menu-items">
-        <div class="menu-item">
-          <div>
-            <div class="menu-item-name">
-              <span data-lang="cs" class="lang-active">Avocado Toast</span>
-              <span data-lang="en">Avocado Toast</span>
-              <span data-lang="de">Avocado-Toast</span>
-              <span data-lang="ru">Авокадо-тост</span>
-            </div>
-            <div class="menu-item-desc">
-              <span data-lang="cs" class="lang-active">Kváskový chléb, vejce, cherry rajčata</span>
-              <span data-lang="en">Sourdough bread, egg, cherry tomatoes</span>
-              <span data-lang="de">Sauerteigbrot, Ei, Kirschtomaten</span>
-              <span data-lang="ru">Ржаной хлеб, яйцо, черри-томаты</span>
-            </div>
-          </div>
-          <div class="menu-item-price">195 Kč</div>
-        </div>
-        <div class="menu-item">
-          <div>
-            <div class="menu-item-name">
-              <span data-lang="cs" class="lang-active">Polední polévka</span>
-              <span data-lang="en">Lunch soup</span>
-              <span data-lang="de">Mittagssuppe</span>
-              <span data-lang="ru">Суп дня</span>
-            </div>
-            <div class="menu-item-desc">
-              <span data-lang="cs" class="lang-active">Sezónní, denně čerstvá</span>
-              <span data-lang="en">Seasonal, freshly made daily</span>
-              <span data-lang="de">Saisonal, täglich frisch</span>
-              <span data-lang="ru">Сезонный, свежий каждый день</span>
-            </div>
-          </div>
-          <div class="menu-item-price">120 Kč</div>
-        </div>
-        <div class="menu-item">
-          <div>
-            <div class="menu-item-name">
-              <span data-lang="cs" class="lang-active">Club Sandwich</span>
-              <span data-lang="en">Club Sandwich</span>
-              <span data-lang="de">Club-Sandwich</span>
-              <span data-lang="ru">Клубный сэндвич</span>
-            </div>
-            <div class="menu-item-desc">
-              <span data-lang="cs" class="lang-active">Kuřecí, slanina, salát, rajče</span>
-              <span data-lang="en">Chicken, bacon, lettuce, tomato</span>
-              <span data-lang="de">Hühnchen, Speck, Salat, Tomate</span>
-              <span data-lang="ru">Курица, бекон, салат, помидор</span>
-            </div>
-          </div>
-          <div class="menu-item-price">225 Kč</div>
-        </div>
-        <div class="menu-item">
-          <div>
-            <div class="menu-item-name">
-              <span data-lang="cs" class="lang-active">Bowl se zeleninou</span>
-              <span data-lang="en">Vegetable Bowl</span>
-              <span data-lang="de">Gemüse-Bowl</span>
-              <span data-lang="ru">Овощной боул</span>
-            </div>
-            <div class="menu-item-desc">
-              <span data-lang="cs" class="lang-active">Quinoa, pečená zelenina, tahini</span>
-              <span data-lang="en">Quinoa, roasted vegetables, tahini</span>
-              <span data-lang="de">Quinoa, geröstetes Gemüse, Tahini</span>
-              <span data-lang="ru">Киноа, запечённые овощи, тахини</span>
-            </div>
-          </div>
-          <div class="menu-item-price">210 Kč</div>
-        </div>
-        <div class="menu-item">
-          <div>
-            <div class="menu-item-name">
-              <span data-lang="cs" class="lang-active">Vajíčka Benedikt</span>
-              <span data-lang="en">Eggs Benedict</span>
-              <span data-lang="de">Eggs Benedict</span>
-              <span data-lang="ru">Яйца Бенедикт</span>
-            </div>
-            <div class="menu-item-desc">
-              <span data-lang="cs" class="lang-active">Pošírovaná vejce, hollandaise</span>
-              <span data-lang="en">Poached eggs, hollandaise</span>
-              <span data-lang="de">Pochierte Eier, Hollandaise</span>
-              <span data-lang="ru">Пашот, голландский соус</span>
-            </div>
-          </div>
-          <div class="menu-item-price">235 Kč</div>
-        </div>
-        <div class="menu-item">
-          <div>
-            <div class="menu-item-name">
-              <span data-lang="cs" class="lang-active">Caesar salát</span>
-              <span data-lang="en">Caesar Salad</span>
-              <span data-lang="de">Caesar-Salat</span>
-              <span data-lang="ru">Салат Цезарь</span>
-            </div>
-            <div class="menu-item-desc">
-              <span data-lang="cs" class="lang-active">Romaine, parmezán, croutons</span>
-              <span data-lang="en">Romaine, parmesan, croutons</span>
-              <span data-lang="de">Romanasalat, Parmesan, Croutons</span>
-              <span data-lang="ru">Романо, пармезан, крутоны</span>
-            </div>
-          </div>
-          <div class="menu-item-price">195 Kč</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- DESSERTS TAB -->
-    <div class="menu-panel" id="tab-desserts">
-      <div class="menu-items">
-        <div class="menu-item">
-          <div>
-            <div class="menu-item-name">
-              <span data-lang="cs" class="lang-active">Medovník</span>
-              <span data-lang="en">Honey Cake</span>
-              <span data-lang="de">Honigkuchen</span>
-              <span data-lang="ru">Медовик</span>
-            </div>
-            <div class="menu-item-desc">
-              <span data-lang="cs" class="lang-active">Tradiční český dezert</span>
-              <span data-lang="en">Traditional Czech dessert</span>
-              <span data-lang="de">Traditionelles tschechisches Dessert</span>
-              <span data-lang="ru">Традиционный чешский десерт</span>
-            </div>
-          </div>
-          <div class="menu-item-price">120 Kč</div>
-        </div>
-        <div class="menu-item">
-          <div>
-            <div class="menu-item-name">
-              <span data-lang="cs" class="lang-active">Cheesecake</span>
-              <span data-lang="en">Cheesecake</span>
-              <span data-lang="de">Käsekuchen</span>
-              <span data-lang="ru">Чизкейк</span>
-            </div>
-            <div class="menu-item-desc">
-              <span data-lang="cs" class="lang-active">Sezónní ovoce, domácí výroba</span>
-              <span data-lang="en">Seasonal fruit, homemade</span>
-              <span data-lang="de">Saisonfrüchte, hausgemacht</span>
-              <span data-lang="ru">Сезонные фрукты, домашний</span>
-            </div>
-          </div>
-          <div class="menu-item-price">135 Kč</div>
-        </div>
-        <div class="menu-item">
-          <div>
-            <div class="menu-item-name">
-              <span data-lang="cs" class="lang-active">Croissant s máslem</span>
-              <span data-lang="en">Butter Croissant</span>
-              <span data-lang="de">Butter-Croissant</span>
-              <span data-lang="ru">Круассан со сливочным маслом</span>
-            </div>
-            <div class="menu-item-desc">
-              <span data-lang="cs" class="lang-active">Každý den čerstvě upečený</span>
-              <span data-lang="en">Freshly baked every day</span>
-              <span data-lang="de">Täglich frisch gebacken</span>
-              <span data-lang="ru">Свежеиспечённый каждый день</span>
-            </div>
-          </div>
-          <div class="menu-item-price">75 Kč</div>
-        </div>
-        <div class="menu-item">
-          <div>
-            <div class="menu-item-name">
-              <span data-lang="cs" class="lang-active">Čokoládový fondán</span>
-              <span data-lang="en">Chocolate Fondant</span>
-              <span data-lang="de">Schokoladen-Fondant</span>
-              <span data-lang="ru">Шоколадный фондан</span>
-            </div>
-            <div class="menu-item-desc">
-              <span data-lang="cs" class="lang-active">Teplý, s vanilkovou zmrzlinou</span>
-              <span data-lang="en">Warm, with vanilla ice cream</span>
-              <span data-lang="de">Warm, mit Vanilleeis</span>
-              <span data-lang="ru">Тёплый, с ванильным мороженым</span>
-            </div>
-          </div>
-          <div class="menu-item-price">155 Kč</div>
-        </div>
-        <div class="menu-item">
-          <div>
-            <div class="menu-item-name">
-              <span data-lang="cs" class="lang-active">Tiramisu</span>
-              <span data-lang="en">Tiramisu</span>
-              <span data-lang="de">Tiramisu</span>
-              <span data-lang="ru">Тирамису</span>
-            </div>
-            <div class="menu-item-desc">
-              <span data-lang="cs" class="lang-active">Klasická italská verze</span>
-              <span data-lang="en">Classic Italian version</span>
-              <span data-lang="de">Klassische italienische Version</span>
-              <span data-lang="ru">Классический итальянский вариант</span>
-            </div>
-          </div>
-          <div class="menu-item-price">140 Kč</div>
-        </div>
-        <div class="menu-item">
-          <div>
-            <div class="menu-item-name">
-              <span data-lang="cs" class="lang-active">Ovocný tart</span>
-              <span data-lang="en">Fruit Tart</span>
-              <span data-lang="de">Obsttarte</span>
-              <span data-lang="ru">Фруктовый тарт</span>
-            </div>
-            <div class="menu-item-desc">
-              <span data-lang="cs" class="lang-active">Sezónní ovoce, crème pâtissière</span>
-              <span data-lang="en">Seasonal fruit, pastry cream</span>
-              <span data-lang="de">Saisonfrüchte, Crème pâtissière</span>
-              <span data-lang="ru">Сезонные фрукты, заварной крем</span>
-            </div>
-          </div>
-          <div class="menu-item-price">130 Kč</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- DRINKS TAB -->
-    <div class="menu-panel" id="tab-drinks">
-      <div class="menu-items">
-        <div class="menu-item">
-          <div>
-            <div class="menu-item-name">
-              <span data-lang="cs" class="lang-active">Čepované pivo</span>
-              <span data-lang="en">Draft Beer</span>
-              <span data-lang="de">Bier vom Fass</span>
-              <span data-lang="ru">Разливное пиво</span>
-            </div>
-            <div class="menu-item-desc">
-              <span data-lang="cs" class="lang-active">Lokální pivovar, 0,5 l</span>
-              <span data-lang="en">Local brewery, 0.5 l</span>
-              <span data-lang="de">Lokale Brauerei, 0,5 l</span>
-              <span data-lang="ru">Местная пивоварня, 0,5 л</span>
-            </div>
-          </div>
-          <div class="menu-item-price">75 Kč</div>
-        </div>
-        <div class="menu-item">
-          <div>
-            <div class="menu-item-name">
-              <span data-lang="cs" class="lang-active">Přírodní víno</span>
-              <span data-lang="en">Natural Wine</span>
-              <span data-lang="de">Naturwein</span>
-              <span data-lang="ru">Натуральное вино</span>
-            </div>
-            <div class="menu-item-desc">
-              <span data-lang="cs" class="lang-active">Sklenka, výběr dle sezóny</span>
-              <span data-lang="en">Glass, seasonal selection</span>
-              <span data-lang="de">Glas, Saisonauswahl</span>
-              <span data-lang="ru">Бокал, сезонный выбор</span>
-            </div>
-          </div>
-          <div class="menu-item-price">120 Kč</div>
-        </div>
-        <div class="menu-item">
-          <div>
-            <div class="menu-item-name">
-              <span data-lang="cs" class="lang-active">Domácí limonáda</span>
-              <span data-lang="en">Homemade Lemonade</span>
-              <span data-lang="de">Hausgemachte Limonade</span>
-              <span data-lang="ru">Домашний лимонад</span>
-            </div>
-            <div class="menu-item-desc">
-              <span data-lang="cs" class="lang-active">Čerstvé ovoce, bylinky</span>
-              <span data-lang="en">Fresh fruit, herbs</span>
-              <span data-lang="de">Frisches Obst, Kräuter</span>
-              <span data-lang="ru">Свежие фрукты, травы</span>
-            </div>
-          </div>
-          <div class="menu-item-price">85 Kč</div>
-        </div>
-        <div class="menu-item">
-          <div>
-            <div class="menu-item-name">
-              <span data-lang="cs" class="lang-active">Bylinkový čaj</span>
-              <span data-lang="en">Herbal Tea</span>
-              <span data-lang="de">Kräutertee</span>
-              <span data-lang="ru">Травяной чай</span>
-            </div>
-            <div class="menu-item-desc">
-              <span data-lang="cs" class="lang-active">Výběr, vždy čerstvě uvařený</span>
-              <span data-lang="en">Selection, freshly brewed</span>
-              <span data-lang="de">Auswahl, frisch gebrüht</span>
-              <span data-lang="ru">Выбор, всегда свежезаваренный</span>
-            </div>
-          </div>
-          <div class="menu-item-price">70 Kč</div>
-        </div>
-        <div class="menu-item">
-          <div>
-            <div class="menu-item-name">
-              <span data-lang="cs" class="lang-active">Horká čokoláda</span>
-              <span data-lang="en">Hot Chocolate</span>
-              <span data-lang="de">Heiße Schokolade</span>
-              <span data-lang="ru">Горячий шоколад</span>
-            </div>
-            <div class="menu-item-desc">
-              <span data-lang="cs" class="lang-active">Belgická, plnotučné mléko</span>
-              <span data-lang="en">Belgian, whole milk</span>
-              <span data-lang="de">Belgisch, Vollmilch</span>
-              <span data-lang="ru">Бельгийский, цельное молоко</span>
-            </div>
-          </div>
-          <div class="menu-item-price">95 Kč</div>
-        </div>
-        <div class="menu-item">
-          <div>
-            <div class="menu-item-name">Aperol Spritz</div>
-            <div class="menu-item-desc">
-              <span data-lang="cs" class="lang-active">Aperol, prosecco, soda</span>
-              <span data-lang="en">Aperol, prosecco, soda</span>
-              <span data-lang="de">Aperol, Prosecco, Soda</span>
-              <span data-lang="ru">Апероль, просекко, содовая</span>
-            </div>
-          </div>
-          <div class="menu-item-price">145 Kč</div>
+        <div class="process-step reveal" style="transition-delay:.28s">
+          <div class="process-dot"></div>
+          <div class="process-n">04</div>
+          <div class="process-t" data-t="pr4_t">Hojení</div>
+          <div class="process-d" data-t="pr4_d">Aftercare balíček, detailní instrukce a kontrola po 2 týdnech. Opravy do 3 měsíců zdarma.</div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============ CONTACT ============ -->
+<!-- CTA BANNER -->
+<div id="contact-banner">
+  <h2 class="banner-t reveal" data-t="cta_title">PŘIPRAVEN NA<br><span>SVOJI KÉRKU?</span></h2>
+  <p class="banner-sub reveal" data-t="cta_sub">Napiš nám nebo zavolej. Konzultace je vždy zdarma.</p>
+  <div class="banner-btns reveal">
+    <a href="tel:+420123456789" class="btn-r"><span data-t="cta_call">Zavolat nyní</span></a>
+    <a href="https://instagram.com/mala.kerka" target="_blank" class="btn-o" data-t="cta_ig">Instagram DM</a>
+  </div>
+</div>
+
+<!-- CONTACT -->
 <section id="contact">
-  <div class="container">
-    <div class="reveal" style="margin-bottom: 60px;">
-      <div class="section-tag">
-        <span data-lang="cs" class="lang-active">Kde nás najdete</span>
-        <span data-lang="en">Find us</span>
-        <span data-lang="de">Finden Sie uns</span>
-        <span data-lang="ru">Как нас найти</span>
+  <div class="contact-grid">
+    <div>
+      <span class="s-label reveal" data-t="ct_label">— Kontakt</span>
+      <h2 class="s-title reveal" data-t="ct_title">NAJDI<br>NÁS <em>.</em></h2>
+      <div class="contact-items">
+        <div class="ci reveal" style="transition-delay:.05s">
+          <div class="ci-icon">📍</div>
+          <div>
+            <div class="ci-label" data-t="ct_addr_l">Adresa</div>
+            <div class="ci-val">Mánesova 12, Praha 2 · Vinohrady<br>120 00, Česká republika</div>
+          </div>
+        </div>
+        <div class="ci reveal" style="transition-delay:.12s">
+          <div class="ci-icon">📞</div>
+          <div>
+            <div class="ci-label" data-t="ct_tel_l">Telefon</div>
+            <div class="ci-val">+420 123 456 789</div>
+          </div>
+        </div>
+        <div class="ci reveal" style="transition-delay:.18s">
+          <div class="ci-icon">✉</div>
+          <div>
+            <div class="ci-label" data-t="ct_email_l">Email</div>
+            <div class="ci-val">info@malakerka.cz</div>
+          </div>
+        </div>
+        <div class="ci reveal" style="transition-delay:.24s">
+          <div class="ci-icon">◎</div>
+          <div>
+            <div class="ci-label" data-t="ct_ig_l">Instagram</div>
+            <div class="ci-val">@mala.kerka</div>
+          </div>
+        </div>
       </div>
-      <h2 class="section-heading">
-        <span data-lang="cs" class="lang-active">Kontakt & <em>Rezervace</em></span>
-        <span data-lang="en">Contact & <em>Reservations</em></span>
-        <span data-lang="de">Kontakt & <em>Reservierung</em></span>
-        <span data-lang="ru">Контакты & <em>Бронирование</em></span>
-      </h2>
     </div>
-    <div class="contact-grid">
-      <div class="reveal-left">
-        <div class="contact-detail">
-          <div class="contact-icon">📍</div>
-          <div>
-            <div class="contact-label">
-              <span data-lang="cs" class="lang-active">Adresa</span>
-              <span data-lang="en">Address</span>
-              <span data-lang="de">Adresse</span>
-              <span data-lang="ru">Адрес</span>
-            </div>
-            <div class="contact-value">Praha, Česká republika<br><small style="font-size:14px; color:var(--muted);">50.0889°N, 14.4327°E</small></div>
-          </div>
-        </div>
-        <div class="contact-detail">
-          <div class="contact-icon">📞</div>
-          <div>
-            <div class="contact-label">
-              <span data-lang="cs" class="lang-active">Telefon</span>
-              <span data-lang="en">Phone</span>
-              <span data-lang="de">Telefon</span>
-              <span data-lang="ru">Телефон</span>
-            </div>
-            <div class="contact-value">+420 XXX XXX XXX</div>
-          </div>
-        </div>
-        <div class="contact-detail">
-          <div class="contact-icon">✉️</div>
-          <div>
-            <div class="contact-label">Email</div>
-            <div class="contact-value">hello@mala.kerka</div>
-          </div>
-        </div>
-        <div class="contact-detail">
-          <div class="contact-icon">📱</div>
-          <div>
-            <div class="contact-label">Instagram</div>
-            <div class="contact-value">@mala.kerka</div>
-          </div>
-        </div>
-        <div class="hours-grid">
-          <div class="hours-item">
-            <div class="hours-day">
-              <span data-lang="cs" class="lang-active">Po — Pá</span>
-              <span data-lang="en">Mon — Fri</span>
-              <span data-lang="de">Mo — Fr</span>
-              <span data-lang="ru">Пн — Пт</span>
-            </div>
-            <div class="hours-time">07:30 — 22:00</div>
-          </div>
-          <div class="hours-item">
-            <div class="hours-day">
-              <span data-lang="cs" class="lang-active">So — Ne</span>
-              <span data-lang="en">Sat — Sun</span>
-              <span data-lang="de">Sa — So</span>
-              <span data-lang="ru">Сб — Вс</span>
-            </div>
-            <div class="hours-time">09:00 — 23:00</div>
-          </div>
-        </div>
+    <div class="reveal-r">
+      <div class="s-label" data-t="ct_hours_l">Otevírací doba</div>
+      <div class="hours-grid" style="margin-top:20px">
+        <div class="hrow"><span data-t="d_mon">Pondělí</span><span data-t="h_closed">Zavřeno</span></div>
+        <div class="hrow"><span data-t="d_tue">Úterý</span><span>11:00–20:00</span></div>
+        <div class="hrow"><span data-t="d_wed">Středa</span><span>11:00–20:00</span></div>
+        <div class="hrow"><span data-t="d_thu">Čtvrtek</span><span>11:00–20:00</span></div>
+        <div class="hrow"><span data-t="d_fri">Pátek</span><span>11:00–20:00</span></div>
+        <div class="hrow"><span data-t="d_sat">Sobota</span><span>10:00–18:00</span></div>
+        <div class="hrow"><span data-t="d_sun">Neděle</span><span data-t="h_closed">Zavřeno</span></div>
       </div>
-      <div class="reveal-right" style="display:flex; flex-direction:column; gap:20px;">
-        <div style="padding:40px; background:var(--warm);">
-          <p class="body-text" style="margin:0;">
-            <span data-lang="cs" class="lang-active">Pro rezervaci stolu nebo soukromé akce nás kontaktujte telefonicky nebo e-mailem. Rádi vám připravíme nezapomenutelný zážitek.</span>
-            <span data-lang="en">For table reservations or private events, contact us by phone or email. We'll be happy to prepare an unforgettable experience for you.</span>
-            <span data-lang="de">Für Tischreservierungen oder private Veranstaltungen kontaktieren Sie uns telefonisch oder per E-Mail.</span>
-            <span data-lang="ru">Для бронирования столика или частных мероприятий свяжитесь с нами по телефону или электронной почте.</span>
-          </p>
-        </div>
-        <a href="mailto:hello@mala.kerka" class="hero-cta" style="align-self: flex-start; text-decoration:none; display:inline-flex;">
-          <span data-lang="cs" class="lang-active">Napište nám</span>
-          <span data-lang="en">Write us</span>
-          <span data-lang="de">Schreiben Sie uns</span>
-          <span data-lang="ru">Написать нам</span>
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
+      <div style="margin-top:32px;padding:20px;border:1px solid var(--border-red);background:rgba(192,57,43,0.05)">
+        <div class="ci-label" data-t="ct_book_l">Rezervace</div>
+        <p style="font-size:13px;color:var(--muted);margin:8px 0 16px;line-height:1.7" data-t="ct_book_txt">Termíny jsou obsazené 2–4 týdny dopředu. Rezervujte s předstihem.</p>
+        <a href="tel:+420123456789" class="btn-r" style="width:100%;text-align:center"><span data-t="ct_book_btn">Rezervovat termín</span></a>
       </div>
     </div>
   </div>
+</section>
 
-  <!-- GOOGLE MAP -->
-  <div class="map-section">
+<!-- MAP -->
+<div id="map-section">
+  <div class="map-container">
     <div class="map-overlay">
-      <div class="map-overlay-title">mala<span style="color:var(--gold)">.</span>kerka</div>
-      <div class="map-overlay-addr">Praha, Česká republika</div>
+      <div class="map-name">MALA.KERKA</div>
+      <div class="map-addr">Mánesova 12<br>Praha 2 – Vinohrady<br>120 00</div>
+      <div class="map-badge">● Otevřeno dnes</div>
     </div>
     <iframe
-      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2560.3!2d14.430722499999999!3d50.088925100000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x470b9539d9944391%3A0xcaa1e27822b793f9!2smala.kerka!5e0!3m2!1scs!2scz!4v1700000000000!5m2!1scs!2scz"
-      allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2560.3!2d14.4327225!3d50.0889251!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x470b9539d9944391%3A0xcaa1e27822b793f9!2smala.kerka!5e0!3m2!1scs!2scz!4v1234567890"
+      allowfullscreen=""
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade">
     </iframe>
   </div>
-</section>
+</div>
 
-<!-- ============ FOOTER ============ -->
+<!-- FOOTER -->
 <footer>
-  <div class="container">
-    <div class="footer-inner">
-      <div class="footer-brand">mala<span>.</span>kerka</div>
-      <div class="footer-links">
-        <a href="#about">
-          <span data-lang="cs" class="lang-active">O nás</span>
-          <span data-lang="en">About</span>
-          <span data-lang="de">Über uns</span>
-          <span data-lang="ru">О нас</span>
-        </a>
-        <a href="#advantages">
-          <span data-lang="cs" class="lang-active">Přednosti</span>
-          <span data-lang="en">Advantages</span>
-          <span data-lang="de">Vorteile</span>
-          <span data-lang="ru">Преимущества</span>
-        </a>
-        <a href="#services">
-          <span data-lang="cs" class="lang-active">Služby</span>
-          <span data-lang="en">Services</span>
-          <span data-lang="de">Leistungen</span>
-          <span data-lang="ru">Услуги</span>
-        </a>
-        <a href="#menu">Menu</a>
-        <a href="#contact">
-          <span data-lang="cs" class="lang-active">Kontakt</span>
-          <span data-lang="en">Contact</span>
-          <span data-lang="de">Kontakt</span>
-          <span data-lang="ru">Контакты</span>
-        </a>
-      </div>
-    </div>
-    <div class="footer-copy">
-      © 2025 mala.kerka · Praha ·
-      <span data-lang="cs" class="lang-active">Všechna práva vyhrazena</span>
-      <span data-lang="en">All rights reserved</span>
-      <span data-lang="de">Alle Rechte vorbehalten</span>
-      <span data-lang="ru">Все права защищены</span>
-    </div>
+  <div class="footer-logo">MALA<em>.</em>KERKA</div>
+  <div class="footer-links">
+    <a href="#about" data-t="nav_about">O nás</a>
+    <a href="#services" data-t="nav_services">Služby</a>
+    <a href="#portfolio" data-t="nav_portfolio">Portfolio</a>
+    <a href="#contact" data-t="nav_contact">Kontakt</a>
+    <a href="https://instagram.com/mala.kerka" target="_blank">Instagram</a>
   </div>
+  <div class="footer-copy">© 2025 mala.kerka · Praha</div>
 </footer>
 
 <script>
-  // CURSOR
-  const cursor = document.getElementById('cursor');
-  const follower = document.getElementById('cursorFollower');
-  let mx = 0, my = 0;
-  document.addEventListener('mousemove', e => {
-    mx = e.clientX; my = e.clientY;
-    cursor.style.left = mx + 'px';
-    cursor.style.top = my + 'px';
-    follower.style.left = mx + 'px';
-    follower.style.top = my + 'px';
-  });
-  document.querySelectorAll('a, button').forEach(el => {
-    el.addEventListener('mouseenter', () => {
-      cursor.style.width = '20px'; cursor.style.height = '20px';
-      follower.style.width = '60px'; follower.style.height = '60px';
-    });
-    el.addEventListener('mouseleave', () => {
-      cursor.style.width = '12px'; cursor.style.height = '12px';
-      follower.style.width = '40px'; follower.style.height = '40px';
-    });
-  });
+// ── CURSOR ──
+const cur = document.getElementById('cur');
+const curR = document.getElementById('cur-r');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+function animCursor(){
+  cur.style.left=mx+'px';cur.style.top=my+'px';
+  rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;
+  curR.style.left=rx+'px';curR.style.top=ry+'px';
+  requestAnimationFrame(animCursor);
+}
+animCursor();
 
-  // LOADER
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      document.getElementById('loader').classList.add('hide');
-      document.getElementById('heroContent').classList.add('visible');
-      setTimeout(() => {
-        document.getElementById('loader').style.display = 'none';
-      }, 1000);
-    }, 1800);
+// ── LOADER ──
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    const l=document.getElementById('loader');
+    l.style.transition='opacity 0.8s';
+    l.style.opacity='0';
+    setTimeout(()=>{l.style.display='none'},800);
+  },2600);
+});
+
+// ── MOBILE MENU ──
+function toggleMenu(){
+  const b=document.getElementById('burger');
+  const m=document.getElementById('mnav');
+  b.classList.toggle('open');
+  m.classList.toggle('open');
+}
+
+// ── SCROLL REVEAL ──
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}
   });
+},{threshold:0.12});
+document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el=>obs.observe(el));
 
-  // SCROLL - LANG BAR
-  window.addEventListener('scroll', () => {
-    const lb = document.getElementById('langBar');
-    if (window.scrollY > 50) lb.classList.add('scrolled');
-    else lb.classList.remove('scrolled');
-  });
+// ── NAV SCROLL ──
+window.addEventListener('scroll',()=>{
+  const n=document.getElementById('nav');
+  n.style.padding=scrollY>60?'12px 40px':'18px 40px';
+});
 
-  // REVEAL ON SCROLL
-  const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('revealed'); }
-    });
-  }, { threshold: 0.12 });
-  reveals.forEach(r => observer.observe(r));
-
-  // LANGUAGE SWITCHER
-  let currentLang = 'cs';
-  function setLang(lang) {
-    currentLang = lang;
-    document.documentElement.lang = lang;
-    document.querySelectorAll('[data-lang]').forEach(el => {
-      el.classList.toggle('lang-active', el.dataset.lang === lang);
-    });
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.textContent.trim().toLowerCase() === lang);
-    });
+// ── TRANSLATIONS ──
+const T={
+  cs:{
+    nav_about:'O nás',nav_services:'Služby',nav_portfolio:'Portfolio',nav_team:'Tým',nav_contact:'Kontakt',
+    hero_tag:'Tattoo Studio · Praha 3 · Vinohrady',
+    hero_sub:'Umění na kůži,<br>které vydrží věčnost',
+    hero_btn1:'Rezervovat termín',hero_btn2:'Prohlédnout práce',scroll:'Scroll',
+    about_label:'— O studiu',about_title:'NAŠE<br><em>STORY</em>',
+    about_text:'Mala.kerka je intimní tattoo studio v srdci Prahy 3. Vzniklo z vášně pro precizní linky a osobní příběhy. Každé tetování tvoříme s absolutní péčí — od prvního návrhu až po finální výsledek na vaší kůži.',
+    stat1:'Spokojených klientů',stat2:'Let zkušeností',stat3:'Vegánské barvy',
+    why_label:'— Proč my',why_title:'NAŠE<br>VÝHODY <em>.</em>',
+    why1_t:'Bezpečnost na prvním místě',why1_d:'Sterilní podmínky, certifikované vegánské inkousty schválené EU. Každá jehla je nová, každý povrch dezinfikovaný.',
+    why2_t:'Individuální přístup',why2_d:'Žádné copy-paste vzory. Každý motiv tvoříme na míru vaší osobnosti, příběhu a části těla.',
+    why3_t:'Zkušení umělci',why3_d:'Náš tým má dohromady přes 15 let praxe. Zvládáme fine line, realism, blackwork i ornamentální styly.',
+    why4_t:'Péče po tetování',why4_d:'Podrobný aftercare manuál, follow-up po 2 týdnech a bezplatné opravy do 3 měsíců.',
+    why5_t:'Útulná atmosféra',why5_d:'Žádný industriální chladný salon. Přijdete k nám jako k přátelům — káva, hudba, klid.',
+    why6_t:'Férové ceny',why6_d:'Transparentní ceník bez skrytých poplatků. Konzultace a návrh zdarma.',
+    srv_label:'— Naše služby',srv_title:'CO<br>NABÍZÍME <em>.</em>',srv_cta:'Konzultace zdarma',
+    s1_name:'Fine Line',s1_desc:'Jemné, precizní linky. Minimalistické kompozice, botanické motivy, geometrie, nápisy. Specialita studia.',s1_price:'od 1 200 Kč / hod',
+    s2_name:'Blackwork & Linework',s2_desc:'Silné černé linie, plná výplň, ornamentální vzory. Výrazný, nadčasový styl.',s2_price:'od 1 500 Kč / hod',
+    s3_name:'Realism',s3_desc:'Fotografický realismus — portréty, příroda, detailní figurální motivy. Černobílý i barevný.',s3_price:'od 2 000 Kč / hod',
+    s4_name:'Cover-up & Rework',s4_desc:'Předělání starého tetování. Přeměníme lítost v umělecké dílo. Konzultace vždy zdarma.',s4_price:'od 1 800 Kč / hod',
+    port_label:'— Portfolio',port_title:'NAŠE<br><em>PRÁCE</em>',
+    p1_l:'Botanika',p1_s:'Fine Line · 2024',p2_l:'Geometrie',p2_s:'Blackwork · 2024',p3_l:'Ornament',p3_s:'Linework · 2023',p4_l:'Portrét',p4_s:'Realism · 2024',p5_l:'Minimál',p5_s:'Fine Line · 2025',p6_l:'Dark Art',p6_s:'Blackwork · 2025',p7_l:'Cover-up',p7_s:'Rework · 2024',
+    team_label:'— Náš tým',team_title:'TATÉŘI<br><em>STUDIA</em>',
+    tm1_role:'Head Artist · Zakladatelka',tm1_bio:'Specialistka na fine line a botanické motivy. 8 let praxe, absolvovala workshopy v Berlíně a Amsterdamu.',
+    tm2_role:'Senior Artist',tm2_bio:'Mistr blackwork a realismu. Každý motiv přenáší do kůže s fotografickou přesností.',
+    tm3_role:'Tattoo Artist',tm3_bio:'Nová hvězda studia. Vášnivá pro ornamentální styly a abstraktní linework. Každý kus je jedinečný.',
+    proc_label:'— Jak to funguje',proc_title:'PROCES<br><em>TETOVÁNÍ</em>',
+    pr1_t:'Konzultace',pr1_d:'Osobně nebo online. Probíráme motiv, styl, umístění a velikost. Vždy zdarma.',
+    pr2_t:'Návrh',pr2_d:'Připravíme jedinečný design na míru. Revize jsou součástí ceny — dokud nebudete spokojeni.',
+    pr3_t:'Tetování',pr3_d:'Den D. Sterilní prostředí, pohodlné křeslo, dobrá hudba. Postaráme se o váš komfort.',
+    pr4_t:'Hojení',pr4_d:'Aftercare balíček, detailní instrukce a kontrola po 2 týdnech. Opravy do 3 měsíců zdarma.',
+    cta_title:'PŘIPRAVEN NA<br><span>SVOJI KÉRKU?</span>',cta_sub:'Napiš nám nebo zavolej. Konzultace je vždy zdarma.',cta_call:'Zavolat nyní',cta_ig:'Instagram DM',
+    ct_label:'— Kontakt',ct_title:'NAJDI<br>NÁS <em>.</em>',ct_addr_l:'Adresa',ct_tel_l:'Telefon',ct_email_l:'Email',ct_ig_l:'Instagram',ct_hours_l:'Otevírací doba',ct_book_l:'Rezervace',ct_book_txt:'Termíny jsou obsazené 2–4 týdny dopředu. Rezervujte s předstihem.',ct_book_btn:'Rezervovat termín',
+    d_mon:'Pondělí',d_tue:'Úterý',d_wed:'Středa',d_thu:'Čtvrtek',d_fri:'Pátek',d_sat:'Sobota',d_sun:'Neděle',h_closed:'Zavřeno',
+  },
+  en:{
+    nav_about:'About',nav_services:'Services',nav_portfolio:'Portfolio',nav_team:'Team',nav_contact:'Contact',
+    hero_tag:'Tattoo Studio · Praha 3 · Vinohrady',
+    hero_sub:'Art on skin,<br>that lasts forever',
+    hero_btn1:'Book an appointment',hero_btn2:'View our work',scroll:'Scroll',
+    about_label:'— About',about_title:'OUR<br><em>STORY</em>',
+    about_text:'Mala.kerka is an intimate tattoo studio in the heart of Prague 3. Born from a passion for precise lines and personal stories. Every tattoo is created with absolute care — from the first sketch to the final result on your skin.',
+    stat1:'Happy clients',stat2:'Years of experience',stat3:'Vegan inks',
+    why_label:'— Why us',why_title:'OUR<br>BENEFITS <em>.</em>',
+    why1_t:'Safety first',why1_d:'Sterile conditions, EU-certified vegan inks. Every needle is new, every surface disinfected.',
+    why2_t:'Individual approach',why2_d:'No copy-paste designs. Every motif is custom-made for your personality, story and body placement.',
+    why3_t:'Experienced artists',why3_d:'Our team has over 15 years of combined experience. We master fine line, realism, blackwork and ornamental styles.',
+    why4_t:'Aftercare included',why4_d:'Detailed aftercare manual, 2-week follow-up and free touch-ups within 3 months.',
+    why5_t:'Cozy atmosphere',why5_d:'No cold industrial salon. Come to us like friends — coffee, music, comfort.',
+    why6_t:'Fair pricing',why6_d:'Transparent pricing with no hidden fees. Consultation and design always free.',
+    srv_label:'— Our services',srv_title:'WHAT<br>WE OFFER <em>.</em>',srv_cta:'Free consultation',
+    s1_name:'Fine Line',s1_desc:'Delicate, precise lines. Minimalist compositions, botanical motifs, geometry, lettering. Studio specialty.',s1_price:'from 1 200 CZK / hr',
+    s2_name:'Blackwork & Linework',s2_desc:'Bold black lines, solid fill, ornamental patterns. A striking, timeless style.',s2_price:'from 1 500 CZK / hr',
+    s3_name:'Realism',s3_desc:'Photographic realism — portraits, nature, detailed figurative motifs. Black & grey or color.',s3_price:'from 2 000 CZK / hr',
+    s4_name:'Cover-up & Rework',s4_desc:'Transform an old tattoo. We turn regret into a work of art. Consultation always free.',s4_price:'from 1 800 CZK / hr',
+    port_label:'— Portfolio',port_title:'OUR<br><em>WORK</em>',
+    p1_l:'Botanical',p1_s:'Fine Line · 2024',p2_l:'Geometry',p2_s:'Blackwork · 2024',p3_l:'Ornament',p3_s:'Linework · 2023',p4_l:'Portrait',p4_s:'Realism · 2024',p5_l:'Minimal',p5_s:'Fine Line · 2025',p6_l:'Dark Art',p6_s:'Blackwork · 2025',p7_l:'Cover-up',p7_s:'Rework · 2024',
+    team_label:'— Our team',team_title:'STUDIO<br><em>ARTISTS</em>',
+    tm1_role:'Head Artist · Founder',tm1_bio:'Specialist in fine line and botanical motifs. 8 years of practice, workshops in Berlin and Amsterdam.',
+    tm2_role:'Senior Artist',tm2_bio:'Master of blackwork and realism. Transfers every motif to skin with photographic precision.',
+    tm3_role:'Tattoo Artist',tm3_bio:'Rising star of the studio. Passionate about ornamental styles and abstract linework. Every piece is unique.',
+    proc_label:'— How it works',proc_title:'TATTOO<br><em>PROCESS</em>',
+    pr1_t:'Consultation',pr1_d:'In person or online. We discuss the motif, style, placement and size. Always free.',
+    pr2_t:'Design',pr2_d:'We create a unique custom design. Revisions are included — until you\'re happy.',
+    pr3_t:'Tattoo session',pr3_d:'The big day. Sterile environment, comfortable chair, good music. We take care of your comfort.',
+    pr4_t:'Healing',pr4_d:'Aftercare kit, detailed instructions and a 2-week check-in. Free touch-ups within 3 months.',
+    cta_title:'READY FOR<br><span>YOUR TATTOO?</span>',cta_sub:'Write us or call. Consultation is always free.',cta_call:'Call now',cta_ig:'Instagram DM',
+    ct_label:'— Contact',ct_title:'FIND<br>US <em>.</em>',ct_addr_l:'Address',ct_tel_l:'Phone',ct_email_l:'Email',ct_ig_l:'Instagram',ct_hours_l:'Opening hours',ct_book_l:'Booking',ct_book_txt:'Appointments are booked 2–4 weeks ahead. Reserve in advance.',ct_book_btn:'Book an appointment',
+    d_mon:'Monday',d_tue:'Tuesday',d_wed:'Wednesday',d_thu:'Thursday',d_fri:'Friday',d_sat:'Saturday',d_sun:'Sunday',h_closed:'Closed',
+  },
+  de:{
+    nav_about:'Über uns',nav_services:'Leistungen',nav_portfolio:'Portfolio',nav_team:'Team',nav_contact:'Kontakt',
+    hero_tag:'Tattoo Studio · Praha 3 · Vinohrady',
+    hero_sub:'Kunst auf der Haut,<br>die für immer hält',
+    hero_btn1:'Termin buchen',hero_btn2:'Arbeiten ansehen',scroll:'Scrollen',
+    about_label:'— Über uns',about_title:'UNSERE<br><em>STORY</em>',
+    about_text:'Mala.kerka ist ein intimes Tattoo-Studio im Herzen von Prag 3. Entstanden aus der Leidenschaft für präzise Linien und persönliche Geschichten. Jedes Tattoo wird mit absoluter Sorgfalt geschaffen — vom ersten Entwurf bis zum Endergebnis.',
+    stat1:'Zufriedene Kunden',stat2:'Jahre Erfahrung',stat3:'Vegane Farben',
+    why_label:'— Warum wir',why_title:'UNSERE<br>VORTEILE <em>.</em>',
+    why1_t:'Sicherheit an erster Stelle',why1_d:'Sterile Bedingungen, EU-zertifizierte vegane Tinten. Jede Nadel neu, jede Oberfläche desinfiziert.',
+    why2_t:'Individueller Ansatz',why2_d:'Keine Copy-Paste-Designs. Jedes Motiv wird individuell auf Ihre Persönlichkeit, Geschichte und Körperstelle angepasst.',
+    why3_t:'Erfahrene Künstler',why3_d:'Unser Team hat zusammen über 15 Jahre Erfahrung. Fine Line, Realismus, Blackwork und Ornamental.',
+    why4_t:'Nachsorge inklusive',why4_d:'Ausführliches Aftercare-Handbuch, 2-Wochen-Follow-up und kostenlose Korrekturen innerhalb von 3 Monaten.',
+    why5_t:'Gemütliche Atmosphäre',why5_d:'Kein kalter Industriesalon. Kommen Sie wie zu Freunden — Kaffee, Musik, Entspannung.',
+    why6_t:'Faire Preise',why6_d:'Transparente Preise ohne versteckte Gebühren. Beratung und Design immer kostenlos.',
+    srv_label:'— Unsere Leistungen',srv_title:'WAS<br>BIETEN WIR <em>.</em>',srv_cta:'Kostenlose Beratung',
+    s1_name:'Fine Line',s1_desc:'Zarte, präzise Linien. Minimalistische Kompositionen, botanische Motive, Geometrie, Lettering.',s1_price:'ab 1 200 CZK / Std',
+    s2_name:'Blackwork & Linework',s2_desc:'Kräftige schwarze Linien, Vollfüllung, ornamentale Muster. Ein markanter, zeitloser Stil.',s2_price:'ab 1 500 CZK / Std',
+    s3_name:'Realismus',s3_desc:'Fotografischer Realismus — Porträts, Natur, detaillierte figurative Motive. Schwarzweiß oder farbig.',s3_price:'ab 2 000 CZK / Std',
+    s4_name:'Cover-up & Rework',s4_desc:'Altes Tattoo umgestalten. Wir verwandeln Reue in ein Kunstwerk. Beratung immer kostenlos.',s4_price:'ab 1 800 CZK / Std',
+    port_label:'— Portfolio',port_title:'UNSERE<br><em>ARBEITEN</em>',
+    p1_l:'Botanik',p1_s:'Fine Line · 2024',p2_l:'Geometrie',p2_s:'Blackwork · 2024',p3_l:'Ornament',p3_s:'Linework · 2023',p4_l:'Porträt',p4_s:'Realism · 2024',p5_l:'Minimal',p5_s:'Fine Line · 2025',p6_l:'Dark Art',p6_s:'Blackwork · 2025',p7_l:'Cover-up',p7_s:'Rework · 2024',
+    team_label:'— Unser Team',team_title:'STUDIO<br><em>KÜNSTLER</em>',
+    tm1_role:'Hauptkünstlerin · Gründerin',tm1_bio:'Spezialistin für Fine Line und botanische Motive. 8 Jahre Erfahrung, Workshops in Berlin und Amsterdam.',
+    tm2_role:'Senior Artist',tm2_bio:'Meister des Blackwork und Realismus. Überträgt jedes Motiv mit fotografischer Präzision auf die Haut.',
+    tm3_role:'Tattoo Artist',tm3_bio:'Aufgehender Stern des Studios. Begeistert für ornamentale Stile und abstraktes Linework.',
+    proc_label:'— So funktioniert es',proc_title:'TATTOO<br><em>PROZESS</em>',
+    pr1_t:'Beratung',pr1_d:'Persönlich oder online. Wir besprechen Motiv, Stil, Platzierung und Größe. Immer kostenlos.',
+    pr2_t:'Entwurf',pr2_d:'Wir erstellen ein einzigartiges individuelles Design. Revisionen inklusive — bis Sie zufrieden sind.',
+    pr3_t:'Tattoo-Sitzung',pr3_d:'Der große Tag. Sterile Umgebung, bequemer Stuhl, gute Musik. Ihr Komfort liegt uns am Herzen.',
+    pr4_t:'Heilung',pr4_d:'Aftercare-Set, detaillierte Anweisungen und ein 2-Wochen-Check-in. Kostenlose Korrekturen innerhalb von 3 Monaten.',
+    cta_title:'BEREIT FÜR<br><span>IHR TATTOO?</span>',cta_sub:'Schreiben Sie uns oder rufen Sie an. Beratung immer kostenlos.',cta_call:'Jetzt anrufen',cta_ig:'Instagram DM',
+    ct_label:'— Kontakt',ct_title:'FINDEN<br>SIE UNS <em>.</em>',ct_addr_l:'Adresse',ct_tel_l:'Telefon',ct_email_l:'E-Mail',ct_ig_l:'Instagram',ct_hours_l:'Öffnungszeiten',ct_book_l:'Buchung',ct_book_txt:'Termine sind 2–4 Wochen im Voraus ausgebucht. Bitte im Voraus reservieren.',ct_book_btn:'Termin buchen',
+    d_mon:'Montag',d_tue:'Dienstag',d_wed:'Mittwoch',d_thu:'Donnerstag',d_fri:'Freitag',d_sat:'Samstag',d_sun:'Sonntag',h_closed:'Geschlossen',
+  },
+  ru:{
+    nav_about:'О нас',nav_services:'Услуги',nav_portfolio:'Портфолио',nav_team:'Команда',nav_contact:'Контакт',
+    hero_tag:'Тату Студия · Прага 3 · Виноградий',
+    hero_sub:'Искусство на коже,<br>которое живёт вечно',
+    hero_btn1:'Записаться',hero_btn2:'Смотреть работы',scroll:'Скролл',
+    about_label:'— О студии',about_title:'НАША<br><em>ИСТОРИЯ</em>',
+    about_text:'Mala.kerka — камерная тату-студия в самом сердце Праги 3. Родилась из страсти к точным линиям и личным историям. Каждую татуировку мы создаём с абсолютной заботой — от первого эскиза до финального результата на вашей коже.',
+    stat1:'Довольных клиентов',stat2:'Лет опыта',stat3:'Веганские краски',
+    why_label:'— Почему мы',why_title:'НАШИ<br>ПРЕИМУЩЕСТВА <em>.</em>',
+    why1_t:'Безопасность прежде всего',why1_d:'Стерильные условия, сертифицированные веганские чернила стандарта ЕС. Каждая игла новая, каждая поверхность дезинфицирована.',
+    why2_t:'Индивидуальный подход',why2_d:'Никаких шаблонных рисунков. Каждый мотив создаётся под вашу личность, историю и место на теле.',
+    why3_t:'Опытные художники',why3_d:'Совокупный опыт команды — более 15 лет. Владеем fine line, реализмом, блэкворком и орнаментальными стилями.',
+    why4_t:'Уход после тату',why4_d:'Подробное руководство по уходу, контроль через 2 недели и бесплатные поправки в течение 3 месяцев.',
+    why5_t:'Уютная атмосфера',why5_d:'Никакого холодного промышленного салона. Приходите как к друзьям — кофе, музыка, спокойствие.',
+    why6_t:'Честные цены',why6_d:'Прозрачный прейскурант без скрытых платежей. Консультация и эскиз всегда бесплатно.',
+    srv_label:'— Наши услуги',srv_title:'ЧТО<br>МЫ ДЕЛАЕМ <em>.</em>',srv_cta:'Бесплатная консультация',
+    s1_name:'Fine Line',s1_desc:'Тонкие, точные линии. Минималистичные композиции, ботанические мотивы, геометрия, леттеринг. Специализация студии.',s1_price:'от 1 200 крон / час',
+    s2_name:'Блэкворк и Линворк',s2_desc:'Жирные чёрные линии, сплошная заливка, орнаментальные узоры. Выразительный, вневременной стиль.',s2_price:'от 1 500 крон / час',
+    s3_name:'Реализм',s3_desc:'Фотографический реализм — портреты, природа, детальные фигуративные мотивы. Чёрно-белый или цветной.',s3_price:'от 2 000 крон / час',
+    s4_name:'Перекрытие и Доработка',s4_desc:'Переделка старой татуировки. Превратим сожаление в произведение искусства. Консультация всегда бесплатно.',s4_price:'от 1 800 крон / час',
+    port_label:'— Портфолио',port_title:'НАШИ<br><em>РАБОТЫ</em>',
+    p1_l:'Ботаника',p1_s:'Fine Line · 2024',p2_l:'Геометрия',p2_s:'Блэкворк · 2024',p3_l:'Орнамент',p3_s:'Линворк · 2023',p4_l:'Портрет',p4_s:'Реализм · 2024',p5_l:'Минимал',p5_s:'Fine Line · 2025',p6_l:'Dark Art',p6_s:'Блэкворк · 2025',p7_l:'Перекрытие',p7_s:'Доработка · 2024',
+    team_label:'— Наша команда',team_title:'МАСТЕРА<br><em>СТУДИИ</em>',
+    tm1_role:'Ведущий мастер · Основатель',tm1_bio:'Специалист по fine line и ботаническим мотивам. 8 лет практики, воркшопы в Берлине и Амстердаме.',
+    tm2_role:'Старший мастер',tm2_bio:'Мастер блэкворка и реализма. Переносит каждый мотив на кожу с фотографической точностью.',
+    tm3_role:'Тату-мастер',tm3_bio:'Восходящая звезда студии. Влюблена в орнаментальные стили и абстрактный линворк. Каждая работа уникальна.',
+    proc_label:'— Как это работает',proc_title:'ПРОЦЕСС<br><em>ТАТУИРОВКИ</em>',
+    pr1_t:'Консультация',pr1_d:'Лично или онлайн. Обсуждаем мотив, стиль, расположение и размер. Всегда бесплатно.',
+    pr2_t:'Эскиз',pr2_d:'Создаём уникальный дизайн под вас. Правки входят в стоимость — до вашего полного удовлетворения.',
+    pr3_t:'Тату-сессия',pr3_d:'День X. Стерильная среда, удобное кресло, хорошая музыка. Позаботимся о вашем комфорте.',
+    pr4_t:'Заживление',pr4_d:'Набор для ухода, подробные инструкции и проверка через 2 недели. Подправки до 3 месяцев бесплатно.',
+    cta_title:'ГОТОВ К<br><span>СВОЕЙ ТАТУИРОВКЕ?</span>',cta_sub:'Напишите или позвоните. Консультация всегда бесплатна.',cta_call:'Позвонить',cta_ig:'Instagram DM',
+    ct_label:'— Контакт',ct_title:'НАЙ-<br>ДИ НАС <em>.</em>',ct_addr_l:'Адрес',ct_tel_l:'Телефон',ct_email_l:'Email',ct_ig_l:'Instagram',ct_hours_l:'Часы работы',ct_book_l:'Запись',ct_book_txt:'Запись заполнена на 2–4 недели вперёд. Бронируйте заранее.',ct_book_btn:'Записаться',
+    d_mon:'Понедельник',d_tue:'Вторник',d_wed:'Среда',d_thu:'Четверг',d_fri:'Пятница',d_sat:'Суббота',d_sun:'Воскресенье',h_closed:'Закрыто',
   }
+};
 
-  // MENU TABS
-  function switchTab(tabId, btn) {
-    document.querySelectorAll('.menu-panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.menu-tab').forEach(t => t.classList.remove('active'));
-    document.getElementById('tab-' + tabId).classList.add('active');
-    btn.classList.add('active');
-  }
-
-  // Smooth scroll nav
-  document.querySelectorAll('a[href^="#"]').forEach(a => {
-    a.addEventListener('click', e => {
-      const target = document.querySelector(a.getAttribute('href'));
-      if (target) {
-        e.preventDefault();
-        target.scrollIntoView({ behavior: 'smooth' });
-      }
-    });
+let lang='cs';
+function setLang(l){
+  lang=l;
+  document.querySelectorAll('.lb').forEach(b=>b.classList.toggle('active',b.textContent.toLowerCase()===l));
+  const t=T[l];
+  document.querySelectorAll('[data-t]').forEach(el=>{
+    const key=el.getAttribute('data-t');
+    if(t[key]!==undefined) el.innerHTML=t[key];
   });
+  document.documentElement.lang=l;
+}
+
+// INIT
+setLang('cs');
 </script>
 </body>
 </html>
